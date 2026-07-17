@@ -6,6 +6,7 @@ import { VIBES, colorToHex, lookupAccessoryDefinition, type VibeEntry } from "@/
 import { vibeImage } from "@/lib/vibe-images";
 import { getAccessoryMeta } from "@/lib/accessory-data";
 import { ProductPicker, ClothingRail } from "@/components/ShopTheLook";
+import { blendVibes, MAX_MIX, MIN_MIX } from "@/lib/vibe-mixer";
 
 
 export const Route = createFileRoute("/")({
@@ -31,13 +32,29 @@ export const Route = createFileRoute("/")({
 function scoreVibe(entry: VibeEntry, q: string): number {
   if (!q) return 0;
   const needle = q.toLowerCase().trim();
+  const words = needle.split(/\s+/).filter(Boolean);
   const v = entry.vibe.toLowerCase();
   if (v === needle) return 100;
-  if (v.startsWith(needle)) return 80;
-  if (v.includes(needle)) return 60;
-  if (entry.definition.toLowerCase().includes(needle)) return 30;
-  if (entry.recommended.join(" ").toLowerCase().includes(needle)) return 15;
-  return 0;
+  if (v.startsWith(needle)) return 85;
+  if (v.includes(needle)) return 70;
+
+  const outfitType = entry.outfitType.toLowerCase();
+  const colors = entry.colors.join(" ").toLowerCase();
+  const accessories = [...entry.mostValuable, ...entry.recommended, ...entry.addOns].join(" ").toLowerCase();
+  const definition = entry.definition.toLowerCase();
+
+  // Multi-word queries score across name, outfit type, colors, accessories and
+  // definition — so "gold formal" or "black chain" surface relevant vibes
+  // even when no single field matches the whole phrase.
+  let score = 0;
+  for (const w of words) {
+    if (v.includes(w)) score += 40;
+    if (outfitType.includes(w)) score += 20;
+    if (colors.includes(w)) score += 18;
+    if (accessories.includes(w)) score += 15;
+    if (definition.includes(w)) score += 10;
+  }
+  return score;
 }
 
 function Index() {
@@ -50,7 +67,7 @@ function Index() {
     return VIBES.map((v) => ({ v, s: scoreVibe(v, query) }))
       .filter((x) => x.s > 0)
       .sort((a, b) => b.s - a.s)
-      .slice(0, 6);
+      .slice(0, 12);
   }, [query]);
 
   const selected = useMemo(
@@ -62,6 +79,16 @@ function Index() {
     () => (filter === "All" ? VIBES : VIBES.filter((v) => v.outfitType === filter)),
     [filter]
   );
+
+  const [mixVibes, setMixVibes] = useState<string[]>([]);
+  const blended = useMemo(() => blendVibes(mixVibes), [mixVibes]);
+  const toggleMix = (name: string) => {
+    setMixVibes((prev) => {
+      if (prev.includes(name)) return prev.filter((n) => n !== name);
+      if (prev.length >= MAX_MIX) return prev;
+      return [...prev, name];
+    });
+  };
 
   return (
     <main className="min-h-screen text-foreground">
@@ -89,7 +116,7 @@ function Index() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Try 'streetwear', 'old money', 'techwear'…"
+                placeholder="Try 'streetwear', 'gold formal', 'black chain'…"
                 className="w-full min-w-0 bg-background/85 backdrop-blur border border-border focus:border-gold outline-none px-5 py-4 text-base text-foreground placeholder:text-muted-foreground/60 transition shadow-sm"
                 aria-label="Search your vibe"
               />
@@ -98,7 +125,7 @@ function Index() {
               </span>
             </div>
             {matches.length > 0 && (
-              <div className="border border-border bg-background/90 backdrop-blur divide-y divide-border text-left rounded-sm shadow-lg">
+              <div className="border border-border bg-background/90 backdrop-blur divide-y divide-border text-left rounded-sm shadow-lg max-h-[420px] overflow-y-auto">
                 {matches.map(({ v }) => (
                   <button
                     key={v.vibe}
@@ -239,6 +266,98 @@ function Index() {
           <div className="border border-border bg-background/50 p-5 md:p-6">
             <ClothingRail vibe={selected.vibe} heading={`Complete the ${selected.vibe} fit`} />
           </div>
+        </div>
+      </section>
+
+      {/* Mix & Match — build a custom vibe from 2–3 existing ones */}
+      <section id="mix" className="px-6 md:px-12 py-20 border-t border-border">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">Build your own</p>
+          <h2 className="text-3xl md:text-4xl font-light mb-3">Mix & Match</h2>
+          <p className="text-muted-foreground max-w-2xl mb-8 leading-relaxed">
+            Not one vibe, but two or three? Pick {MIN_MIX}–{MAX_MIX} and we'll blend the colors, hero pieces, and clothing
+            into an edit that's entirely yours.
+          </p>
+
+          <div className="flex flex-wrap gap-2 mb-4">
+            {VIBES.map((v) => {
+              const isOn = mixVibes.includes(v.vibe);
+              const disabled = !isOn && mixVibes.length >= MAX_MIX;
+              return (
+                <button
+                  key={v.vibe}
+                  onClick={() => toggleMix(v.vibe)}
+                  disabled={disabled}
+                  className={`text-xs tracking-[0.16em] uppercase border px-3.5 py-2 transition ${
+                    isOn
+                      ? "border-gold bg-gold/20 text-gold"
+                      : disabled
+                        ? "border-border/50 text-muted-foreground/40 cursor-not-allowed"
+                        : "border-border text-foreground/80 hover:border-gold-soft hover:text-foreground"
+                  }`}
+                >
+                  {v.vibe}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-4 mb-10">
+            <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">
+              {mixVibes.length}/{MAX_MIX} selected
+            </span>
+            {mixVibes.length > 0 && (
+              <button
+                onClick={() => setMixVibes([])}
+                className="text-xs tracking-[0.2em] uppercase text-gold hover:underline"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {!blended && (
+            <p className="text-sm text-muted-foreground border border-dashed border-border px-5 py-6 text-center">
+              Pick at least {MIN_MIX} vibes above to see your blend.
+            </p>
+          )}
+
+          {blended && (
+            <div className="border border-gold-soft bg-card/40 p-6 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <div className="flex items-start justify-between flex-wrap gap-4">
+                <div>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {blended.sourceVibes.map((n) => (
+                      <span key={n} className="text-[10px] tracking-[0.2em] uppercase text-gold border border-gold-soft px-2 py-1">
+                        {n}
+                      </span>
+                    ))}
+                  </div>
+                  <h3 className="font-display text-3xl md:text-4xl font-light">{blended.vibe}</h3>
+                  <div className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground mt-2">{blended.outfitLabel}</div>
+                  <p className="text-muted-foreground mt-4 max-w-2xl leading-relaxed">{blended.definition}</p>
+                </div>
+                <div className="flex items-center gap-3 flex-wrap">
+                  {blended.colors.map((c) => (
+                    <div key={c} className="flex items-center gap-2">
+                      <span className="h-6 w-6 border border-border" style={{ backgroundColor: colorToHex(c) }} />
+                      <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{c}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-3 items-stretch">
+                <Block label="Most valuable" subtitle="One hero per vibe" items={blended.mostValuable} accent />
+                <Block label="Recommended" subtitle="The blended edit" items={blended.recommended} />
+                <Block label="Add-ons" subtitle="Layer them in" items={blended.addOns} />
+              </div>
+
+              <div className="border-t border-border/60 pt-6">
+                <ClothingRail vibe={blended.vibe} heading="Complete the blended fit" items={blended.clothing} />
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

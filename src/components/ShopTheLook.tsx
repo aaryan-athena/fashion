@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { amazonUrl, myntraUrl } from "@/lib/shop-links";
 import { getProductOptions } from "@/lib/product-options";
-import { getVibeClothing } from "@/lib/clothing-data";
+import { getVibeClothing, type ClothingItem } from "@/lib/clothing-data";
 
 /** Amazon + Myntra deep-link buttons for a search query. */
 export function ShopButtons({ query, size = "sm" }: { query: string; size?: "sm" | "xs" }) {
@@ -72,9 +72,17 @@ export function ProductPicker({ accessory, defaultOpen = false }: { accessory: s
   );
 }
 
-/** The clothing layer for a vibe — key garments, each shoppable. */
-export function ClothingRail({ vibe, heading = "Complete the fit" }: { vibe: string; heading?: string }) {
-  const items = getVibeClothing(vibe);
+/** The clothing layer for a vibe — key garments, each shoppable. Pass `items` directly for blended/custom vibes. */
+export function ClothingRail({
+  vibe,
+  heading = "Complete the fit",
+  items: itemsProp,
+}: {
+  vibe: string;
+  heading?: string;
+  items?: ClothingItem[];
+}) {
+  const items = itemsProp ?? getVibeClothing(vibe);
   if (items.length === 0) return null;
 
   return (
