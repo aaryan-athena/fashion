@@ -4,7 +4,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import heroBg from "../assets/hero-jewels.jpg";
-import heroLightAsset from "../assets/hero-jewels-light.jpg.asset.json";
 import { reportAppError } from "../lib/error-reporting";
 
 function NotFoundComponent() {
@@ -115,14 +114,14 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Solid base color (white in light, dark in dark) sits underneath the image */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-background" />
-      {/* Light-mode hero */}
+      {/* Light-mode hero — same photo as dark mode, brightened and desaturated to read correctly against a light UI */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none dark:hidden">
         <img
-          src={heroLightAsset.url}
+          src={heroBg}
           alt=""
-          className="w-full h-full object-cover [filter:brightness(1.08)_contrast(1.02)_saturate(1.04)]"
+          className="w-full h-full object-cover [filter:brightness(1.55)_contrast(0.92)_saturate(0.7)]"
         />
-        <div className="absolute inset-0" style={{ backgroundColor: "hsl(35 25% 45%)", opacity: 0.4 }} />
+        <div className="absolute inset-0" style={{ backgroundColor: "hsl(40 30% 96%)", opacity: 0.45 }} />
       </div>
       {/* Dark-mode hero */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none hidden dark:block">

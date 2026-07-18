@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
-import akshinAsset from "@/assets/akshin.jpeg.asset.json";
+import founderImg from "@/assets/f_img.jpeg";
 
 export const Route = createFileRoute("/founder")({
   head: () => ({
@@ -53,7 +53,7 @@ function FounderPage() {
           <figure className="md:sticky md:top-8">
             <div className="border border-border overflow-hidden bg-card">
               <img
-                src={akshinAsset.url}
+                src={founderImg}
                 alt="Akshin Chugh, founder of The Vault"
                 width={960}
                 height={1280}

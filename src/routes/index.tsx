@@ -7,6 +7,7 @@ import { vibeImage } from "@/lib/vibe-images";
 import { getAccessoryMeta } from "@/lib/accessory-data";
 import { ProductPicker, ClothingRail } from "@/components/ShopTheLook";
 import { blendVibes, MAX_MIX, MIN_MIX } from "@/lib/vibe-mixer";
+import { aiVibeSearch, type AiVibeSearchResponse } from "@/lib/api/groq-search.functions";
 
 
 export const Route = createFileRoute("/")({
@@ -57,10 +58,16 @@ function scoreVibe(entry: VibeEntry, q: string): number {
   return score;
 }
 
+type AiState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "done"; response: AiVibeSearchResponse; forQuery: string };
+
 function Index() {
   const [query, setQuery] = useState("");
   const [selectedVibe, setSelectedVibe] = useState<string>("Luxury");
   const [filter, setFilter] = useState<"All" | "Casual" | "Formal">("All");
+  const [aiState, setAiState] = useState<AiState>({ status: "idle" });
 
   const matches = useMemo(() => {
     if (!query.trim()) return [];
@@ -69,6 +76,22 @@ function Index() {
       .sort((a, b) => b.s - a.s)
       .slice(0, 12);
   }, [query]);
+
+  const askAi = async () => {
+    const q = query.trim();
+    if (q.length < 2 || aiState.status === "loading") return;
+    setAiState({ status: "loading" });
+    try {
+      const response = await aiVibeSearch({ data: { query: q } });
+      setAiState({ status: "done", response, forQuery: q });
+    } catch {
+      setAiState({
+        status: "done",
+        response: { ok: false, reason: "AI search is temporarily unavailable — try again shortly." },
+        forQuery: q,
+      });
+    }
+  };
 
   const selected = useMemo(
     () => VIBES.find((v) => v.vibe === selectedVibe) ?? VIBES[0],
@@ -112,18 +135,31 @@ function Index() {
 
           {/* Search */}
           <div className="space-y-3 max-w-xl mx-auto">
-            <div className="relative">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                askAi();
+              }}
+              className="relative"
+            >
               <input
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Try 'streetwear', 'gold formal', 'black chain'…"
-                className="w-full min-w-0 bg-background/85 backdrop-blur border border-border focus:border-gold outline-none px-5 py-4 text-base text-foreground placeholder:text-muted-foreground/60 transition shadow-sm"
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  if (aiState.status === "done") setAiState({ status: "idle" });
+                }}
+                placeholder="Try 'streetwear', or describe a whole look — 'rooftop party in Dubai, feels expensive'…"
+                className="w-full min-w-0 bg-background/85 backdrop-blur border border-border focus:border-gold outline-none pl-5 pr-28 py-4 text-base text-foreground placeholder:text-muted-foreground/60 transition shadow-sm"
                 aria-label="Search your vibe"
               />
-              <span className="absolute right-5 top-1/2 hidden -translate-y-1/2 text-xs tracking-[0.3em] uppercase text-muted-foreground sm:block">
-                Vibe ↵
-              </span>
-            </div>
+              <button
+                type="submit"
+                disabled={query.trim().length < 2 || aiState.status === "loading"}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] tracking-[0.2em] uppercase border border-gold text-gold px-3.5 py-2.5 hover:bg-gold hover:text-background transition disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gold whitespace-nowrap"
+              >
+                {aiState.status === "loading" ? "Thinking…" : "✨ Ask AI"}
+              </button>
+            </form>
             {matches.length > 0 && (
               <div className="border border-border bg-background/90 backdrop-blur divide-y divide-border text-left rounded-sm shadow-lg max-h-[420px] overflow-y-auto">
                 {matches.map(({ v }) => (
@@ -145,8 +181,81 @@ function Index() {
                 ))}
               </div>
             )}
-            {query && matches.length === 0 && (
-              <p className="text-sm text-muted-foreground px-1 text-left">No vibe matches — try one of the chips below.</p>
+            {query && matches.length === 0 && aiState.status === "idle" && (
+              <p className="text-sm text-muted-foreground px-1 text-left">
+                No vibe matches — try one of the chips below, or hit "Ask AI" above to describe the whole look.
+              </p>
+            )}
+
+            {aiState.status === "loading" && (
+              <p className="text-sm text-muted-foreground px-1 text-left animate-pulse">Asking AI for your vibe…</p>
+            )}
+
+            {aiState.status === "done" && aiState.forQuery === query.trim() && (
+              <div className="border border-gold-soft bg-background/95 backdrop-blur rounded-sm shadow-lg text-left p-5 space-y-4">
+                {aiState.response.ok ? (
+                  <>
+                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                      <div>
+                        <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-1">
+                          AI match · {aiState.response.result.confidence} confidence
+                        </div>
+                        <div className="font-display text-xl">{aiState.response.result.customVibeName}</div>
+                      </div>
+                      <button
+                        onClick={() => setAiState({ status: "idle" })}
+                        className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-gold transition"
+                      >
+                        Dismiss ✕
+                      </button>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{aiState.response.result.styleNote}</p>
+                    {aiState.response.result.suggestedColors.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {aiState.response.result.suggestedColors.map((c) => (
+                          <div key={c} className="flex items-center gap-1.5 border border-border px-2 py-1">
+                            <span className="h-3 w-3" style={{ backgroundColor: colorToHex(c) }} />
+                            <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">{c}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {aiState.response.result.matchedVibes.map((name) => (
+                        <button
+                          key={name}
+                          onClick={() => {
+                            setSelectedVibe(name);
+                            setAiState({ status: "idle" });
+                            setQuery("");
+                            document.getElementById("result")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }}
+                          className="text-xs tracking-[0.16em] uppercase border border-gold px-3 py-1.5 text-gold hover:bg-gold hover:text-background transition"
+                        >
+                          {name} →
+                        </button>
+                      ))}
+                      {aiState.response.result.matchedVibes.length >= MIN_MIX && (
+                        <button
+                          onClick={() => {
+                            if (aiState.status === "done" && aiState.response.ok) {
+                              setMixVibes(aiState.response.result.matchedVibes.slice(0, MAX_MIX));
+                            }
+                            setAiState({ status: "idle" });
+                            setQuery("");
+                            document.getElementById("mix")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }}
+                          className="text-xs tracking-[0.16em] uppercase border border-border px-3 py-1.5 text-foreground/80 hover:border-gold hover:text-gold transition"
+                        >
+                          Blend these →
+                        </button>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">{aiState.response.reason}</p>
+                )}
+              </div>
             )}
 
             <div className="flex flex-wrap justify-center gap-2 pt-2">
