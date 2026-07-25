@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import heroImg from "@/assets/hero-jewels.jpg";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 import { VIBES, colorToHex, lookupAccessoryDefinition, type VibeEntry } from "@/lib/vault-data";
@@ -63,6 +63,71 @@ type AiState =
   | { status: "loading" }
   | { status: "done"; response: AiVibeSearchResponse; forQuery: string };
 
+const CURATED_VIBE_NAMES = ["Streetwear", "Old Money", "Techwear", "Luxury", "Minimal", "Y2K", "Vintage", "Sporty"];
+
+const SECTION_NAV_ITEMS = [
+  { id: "hero-top", label: "Search" },
+  { id: "result", label: "Your Edit" },
+  { id: "mix", label: "Mix & Match" },
+  { id: "browse", label: "Browse" },
+  { id: "atelier", label: "Method" },
+];
+
+function SectionNav() {
+  const [active, setActive] = useState(SECTION_NAV_ITEMS[0].id);
+
+  useEffect(() => {
+    const targets = SECTION_NAV_ITEMS.map(({ id }) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => Boolean(el),
+    );
+    if (targets.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+    targets.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <nav
+      aria-label="Section navigation"
+      className="hidden lg:flex fixed right-5 xl:right-8 top-1/2 -translate-y-1/2 z-40 flex-col items-end gap-4"
+    >
+      {SECTION_NAV_ITEMS.map((item) => {
+        const isActive = active === item.id;
+        return (
+          <button
+            key={item.id}
+            onClick={() => document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            className="group flex items-center gap-3"
+            aria-current={isActive ? "true" : undefined}
+          >
+            <span
+              className={`text-[10px] tracking-[0.2em] uppercase whitespace-nowrap bg-background/90 backdrop-blur px-2 py-1 border transition ${
+                isActive
+                  ? "text-gold border-gold-soft opacity-100"
+                  : "text-muted-foreground border-border opacity-0 group-hover:opacity-100"
+              }`}
+            >
+              {item.label}
+            </span>
+            <span
+              className={`h-2.5 w-2.5 rounded-full border shrink-0 transition ${
+                isActive ? "bg-gold border-gold scale-125" : "bg-transparent border-muted-foreground/50 group-hover:border-gold"
+              }`}
+            />
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
+
 function Index() {
   const [query, setQuery] = useState("");
   const [selectedVibe, setSelectedVibe] = useState<string>("Luxury");
@@ -98,6 +163,12 @@ function Index() {
     [selectedVibe]
   );
 
+  const [showAllVibes, setShowAllVibes] = useState(false);
+  const remainingVibes = useMemo(
+    () => VIBES.filter((v) => !CURATED_VIBE_NAMES.includes(v.vibe)),
+    []
+  );
+
   const browse = useMemo(
     () => (filter === "All" ? VIBES : VIBES.filter((v) => v.outfitType === filter)),
     [filter]
@@ -114,18 +185,18 @@ function Index() {
   };
 
   return (
-    <main className="min-h-screen text-foreground">
+    <main className="min-h-screen text-foreground overflow-x-hidden">
       <SiteHeader />
-
+      <SectionNav />
 
       {/* Hero — sits over the global fixed background image */}
-      <section className="relative min-h-[80vh] flex items-center justify-center px-5 sm:px-6 md:px-10 py-20">
+      <section id="hero-top" className="relative min-h-[80vh] flex items-center justify-center px-5 sm:px-6 md:px-10 py-16 sm:py-20">
         <div className="relative z-10 max-w-4xl mx-auto w-full text-center space-y-6">
-          <div className="inline-flex items-center gap-3 border border-gold bg-background/70 backdrop-blur px-4 py-2 mx-auto rounded-sm shadow-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-            <p className="text-[11px] sm:text-xs tracking-[0.32em] uppercase text-gold font-semibold">Men's Accessories · Chains · Rings · Watches · Bracelets</p>
+          <div className="inline-flex items-center gap-3 border border-gold bg-background/70 backdrop-blur px-3.5 sm:px-4 py-2 mx-auto rounded-sm shadow-sm max-w-[90vw]">
+            <span className="h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
+            <p className="text-[9.5px] sm:text-xs tracking-[0.14em] sm:tracking-[0.32em] uppercase text-gold font-semibold leading-snug">Men's Accessories · Chains · Rings · Watches · Bracelets</p>
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl leading-[0.95] font-medium text-foreground" style={{ textShadow: "0 2px 24px color-mix(in oklab, var(--background) 80%, transparent)" }}>
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl leading-[1.05] sm:leading-[0.95] font-medium text-foreground" style={{ textShadow: "0 2px 24px color-mix(in oklab, var(--background) 80%, transparent)" }}>
             Men's accessories,
             <span className="italic text-gold"> matched to your vibe.</span>
           </h1>
@@ -148,16 +219,16 @@ function Index() {
                   setQuery(e.target.value);
                   if (aiState.status === "done") setAiState({ status: "idle" });
                 }}
-                placeholder="Try 'streetwear', or describe a whole look — 'rooftop party in Dubai, feels expensive'…"
-                className="w-full min-w-0 bg-background/85 backdrop-blur border border-border focus:border-gold outline-none pl-5 pr-28 py-4 text-base text-foreground placeholder:text-muted-foreground/60 transition shadow-sm"
+                placeholder="Try 'streetwear', or describe a whole look…"
+                className="w-full min-w-0 bg-background/85 backdrop-blur border border-border focus:border-gold outline-none pl-4 pr-[5.5rem] sm:pl-5 sm:pr-28 py-4 text-sm sm:text-base text-foreground placeholder:text-muted-foreground/60 transition shadow-sm"
                 aria-label="Search your vibe"
               />
               <button
                 type="submit"
                 disabled={query.trim().length < 2 || aiState.status === "loading"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] tracking-[0.2em] uppercase border border-gold text-gold px-3.5 py-2.5 hover:bg-gold hover:text-background transition disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gold whitespace-nowrap"
+                className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 text-[9px] sm:text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase border border-gold text-gold px-2.5 sm:px-3.5 py-2 sm:py-2.5 hover:bg-gold hover:text-background transition disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gold whitespace-nowrap"
               >
-                {aiState.status === "loading" ? "Thinking…" : "✨ Ask AI"}
+                {aiState.status === "loading" ? "…" : "✨ Ask AI"}
               </button>
             </form>
             {matches.length > 0 && (
@@ -259,7 +330,7 @@ function Index() {
             )}
 
             <div className="flex flex-wrap justify-center gap-2 pt-2">
-              {["Streetwear", "Old Money", "Techwear", "Luxury", "Minimalist", "Y2K", "Vintage", "Sporty"].map((vibeName) => {
+              {CURATED_VIBE_NAMES.map((vibeName) => {
                 const v = VIBES.find((x) => x.vibe === vibeName);
                 if (!v) return null;
                 return (
@@ -277,10 +348,40 @@ function Index() {
                   </button>
                 );
               })}
+              <button
+                onClick={() => setShowAllVibes((s) => !s)}
+                className={`text-xs tracking-[0.18em] uppercase border border-dashed px-4 py-2 transition backdrop-blur ${
+                  showAllVibes
+                    ? "border-gold text-gold bg-gold/10"
+                    : "border-border text-muted-foreground bg-background/60 hover:border-gold hover:text-gold"
+                }`}
+              >
+                {showAllVibes ? "Less −" : `More +${remainingVibes.length}`}
+              </button>
             </div>
+
+            {showAllVibes && (
+              <div className="flex flex-wrap justify-center gap-2 pt-1 animate-in fade-in slide-in-from-top-1 duration-300">
+                {remainingVibes.map((v) => (
+                  <button
+                    key={v.vibe}
+                    onClick={() => {
+                      setSelectedVibe(v.vibe);
+                      document.getElementById("result")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    className={`text-xs tracking-[0.18em] uppercase border px-4 py-2 transition backdrop-blur ${
+                      selectedVibe === v.vibe ? "border-gold bg-gold/20 text-gold" : "border-border bg-background/60 text-foreground/80 hover:border-gold hover:text-foreground"
+                    }`}
+                  >
+                    {v.vibe}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div className="text-center pt-1">
               <Link to="/vibes" className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground hover:text-gold transition">
-                See all 22 vibes →
+                Open the full vibe library →
               </Link>
             </div>
           </div>
@@ -493,7 +594,7 @@ function Index() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {browse.map((v) => {
               const active = v.vibe === selected.vibe;
               return (
