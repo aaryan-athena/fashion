@@ -88,15 +88,29 @@ export function ClothingRail({
   return (
     <div>
       <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-3">{heading}</div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {items.map((c) => (
-          <div
+          <figure
             key={c.item}
-            className="border border-border/70 bg-background/40 px-3 py-2.5 flex items-center justify-between gap-3 flex-wrap"
+            className="group border border-border hover:border-gold-soft transition overflow-hidden bg-card/40"
           >
-            <span className="text-xs text-foreground/90">{c.item}</span>
-            <ShopButtons query={c.query} size="xs" />
-          </div>
+            <div className="aspect-square bg-card overflow-hidden">
+              {c.image && (
+                <img
+                  src={c.image}
+                  alt={c.item}
+                  width={400}
+                  height={400}
+                  loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              )}
+            </div>
+            <figcaption className="p-3 space-y-2">
+              <div className="text-xs font-medium leading-tight">{c.item}</div>
+              <ShopButtons query={c.query} size="xs" />
+            </figcaption>
+          </figure>
         ))}
       </div>
     </div>
