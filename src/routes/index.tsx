@@ -187,7 +187,7 @@ function Index() {
   };
 
   return (
-    <main className="min-h-screen text-foreground overflow-x-hidden">
+    <main className="min-h-screen text-foreground">
       <SiteHeader />
       <SectionNav />
 

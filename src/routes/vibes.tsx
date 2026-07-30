@@ -48,45 +48,47 @@ function VibesPage() {
         <div className="space-y-8">
           {list.map((v) => (
             <article key={v.vibe} className="border border-border hover:border-gold-soft transition grid md:grid-cols-[320px_1fr] overflow-hidden bg-card/40">
-              <div className="relative bg-card md:sticky md:top-0 md:self-start">
-                <div className="aspect-[4/5] md:aspect-[4/5] w-full overflow-hidden">
-                  <img
-                    src={vibeImage(v.vibe)}
-                    alt={`${v.vibe} accessories`}
-                    width={768}
-                    height={960}
-                    loading="lazy"
-                    className="w-full h-full object-cover object-center"
-                  />
-                </div>
-                <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-background/90 to-transparent pointer-events-none">
-                  <div className="text-[10px] tracking-[0.3em] uppercase text-gold">{v.outfitType}</div>
-                  <div className="font-display text-2xl font-light text-foreground">{v.vibe}</div>
-                </div>
-              </div>
-              <div className="hidden md:block p-5 space-y-4 border-t border-border/60">
-                <div>
-                  <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-2">Palette</div>
-                  <div className="flex flex-wrap gap-2">
-                    {v.colors.map((c) => (
-                      <div key={c} className="flex items-center gap-1.5 border border-border px-2 py-1">
-                        <span className="h-3 w-3" style={{ backgroundColor: colorToHex(c) }} />
-                        <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">{c}</span>
-                      </div>
-                    ))}
+              <div className="bg-card md:sticky md:top-0 md:self-start">
+                <div className="relative">
+                  <div className="aspect-[4/5] md:aspect-[4/5] w-full overflow-hidden">
+                    <img
+                      src={vibeImage(v.vibe)}
+                      alt={`${v.vibe} accessories`}
+                      width={768}
+                      height={960}
+                      loading="lazy"
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-background/90 to-transparent pointer-events-none">
+                    <div className="text-[10px] tracking-[0.3em] uppercase text-gold">{v.outfitType}</div>
+                    <div className="font-display text-2xl font-light text-foreground">{v.vibe}</div>
                   </div>
                 </div>
-                <div className="pt-3 border-t border-border/60">
-                  <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-2">Hero piece</div>
-                  <div className="font-display text-lg leading-snug">{v.mostValuable[0]}</div>
-                </div>
-                <div className="pt-3 border-t border-border/60">
-                  <Link
-                    to="/"
-                    className="block text-center text-[10px] tracking-[0.3em] uppercase border border-gold px-4 py-2.5 hover:bg-gold hover:text-background transition"
-                  >
-                    Try in finder →
-                  </Link>
+                <div className="hidden md:block p-5 space-y-4 border-t border-border/60">
+                  <div>
+                    <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-2">Palette</div>
+                    <div className="flex flex-wrap gap-2">
+                      {v.colors.map((c) => (
+                        <div key={c} className="flex items-center gap-1.5 border border-border px-2 py-1">
+                          <span className="h-3 w-3" style={{ backgroundColor: colorToHex(c) }} />
+                          <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">{c}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="pt-3 border-t border-border/60">
+                    <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-2">Hero piece</div>
+                    <div className="font-display text-lg leading-snug">{v.mostValuable[0]}</div>
+                  </div>
+                  <div className="pt-3 border-t border-border/60">
+                    <Link
+                      to="/"
+                      className="block text-center text-[10px] tracking-[0.3em] uppercase border border-gold px-4 py-2.5 hover:bg-gold hover:text-background transition"
+                    >
+                      Try in finder →
+                    </Link>
+                  </div>
                 </div>
               </div>
               <div className="p-6 md:p-8">
