@@ -111,14 +111,16 @@ function SectionNav() {
               className={`text-[10px] tracking-[0.2em] uppercase whitespace-nowrap bg-background/90 backdrop-blur px-2 py-1 border transition ${
                 isActive
                   ? "text-gold border-gold-soft opacity-100"
-                  : "text-muted-foreground border-border opacity-0 group-hover:opacity-100"
+                  : "text-foreground/70 border-border opacity-60 group-hover:opacity-100 group-hover:text-foreground"
               }`}
             >
               {item.label}
             </span>
             <span
-              className={`h-2.5 w-2.5 rounded-full border shrink-0 transition ${
-                isActive ? "bg-gold border-gold scale-125" : "bg-transparent border-muted-foreground/50 group-hover:border-gold"
+              className={`h-2.5 w-2.5 rounded-full border-2 shrink-0 transition ${
+                isActive
+                  ? "bg-gold border-gold scale-125"
+                  : "bg-foreground/25 border-foreground/45 group-hover:bg-gold/30 group-hover:border-gold"
               }`}
             />
           </button>
@@ -480,11 +482,13 @@ function Index() {
       </section>
 
       {/* Mix & Match — build a custom vibe from 2–3 existing ones */}
-      <section id="mix" className="px-6 md:px-12 py-20 border-t border-border">
+      <section id="mix" className="px-6 md:px-12 py-24 md:py-28 border-t border-border bg-card/30">
         <div className="max-w-6xl mx-auto">
-          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">Build your own</p>
-          <h2 className="text-3xl md:text-4xl font-light mb-3">Mix & Match</h2>
-          <p className="text-muted-foreground max-w-2xl mb-8 leading-relaxed">
+          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-4 font-semibold">Build your own</p>
+          <h2 className="text-6xl sm:text-7xl md:text-8xl leading-[0.95] font-medium mb-5">
+            Mix <span className="italic text-gold">&</span> Match
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mb-8 leading-relaxed text-lg">
             Not one vibe, but two or three? Pick {MIN_MIX}–{MAX_MIX} and we'll blend the colors, hero pieces, and clothing
             into an edit that's entirely yours.
           </p>

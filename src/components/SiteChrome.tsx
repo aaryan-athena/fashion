@@ -16,7 +16,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="border-b border-border">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-5 sm:px-6 md:px-10 lg:px-12 lg:flex lg:justify-between lg:gap-6">
         <Link to="/" className="flex items-center gap-2.5 shrink-0" onClick={() => setOpen(false)}>
           <div className="h-2 w-2 rounded-full bg-gold" />
