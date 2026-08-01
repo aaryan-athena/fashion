@@ -138,3 +138,24 @@ export function lookupAccessoryDefinition(label: string): { name: string; defini
   if (fallback) return { name: key, definition: ACCESSORY_DEFINITIONS[fallback] };
   return { name: titleCase(cleaned), definition: "" };
 }
+
+export const vibeSlug = (vibe: string) =>
+  vibe.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+// Reverse lookup: canonical accessory name → every vibe that recommends it
+// (as a hero piece, in the main edit, or as an add-on).
+const ACCESSORY_TO_VIBES: Record<string, string[]> = (() => {
+  const map: Record<string, Set<string>> = {};
+  for (const v of VIBES) {
+    const pieces = [...v.mostValuable, ...v.recommended, ...v.addOns];
+    for (const p of pieces) {
+      const { name } = lookupAccessoryDefinition(p);
+      (map[name] ??= new Set()).add(v.vibe);
+    }
+  }
+  const out: Record<string, string[]> = {};
+  for (const [name, set] of Object.entries(map)) out[name] = [...set];
+  return out;
+})();
+
+export const getVibesForAccessory = (name: string): string[] => ACCESSORY_TO_VIBES[name] ?? [];

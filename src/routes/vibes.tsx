@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
-import { VIBES, colorToHex, lookupAccessoryDefinition } from "@/lib/vault-data";
+import { VIBES, colorToHex, lookupAccessoryDefinition, vibeSlug } from "@/lib/vault-data";
 import { vibeImage } from "@/lib/vibe-images";
 import { ACCESSORY_META } from "@/lib/accessory-data";
 import { ProductPicker, ClothingRail } from "@/components/ShopTheLook";
@@ -47,7 +47,7 @@ function VibesPage() {
 
         <div className="space-y-8">
           {list.map((v) => (
-            <article key={v.vibe} className="border border-border hover:border-gold-soft transition grid md:grid-cols-[320px_1fr] overflow-hidden bg-card/40">
+            <article id={`vibe-${vibeSlug(v.vibe)}`} key={v.vibe} className="border border-border hover:border-gold-soft transition grid md:grid-cols-[320px_1fr] overflow-hidden bg-card/40 scroll-mt-24">
               <div className="bg-card md:sticky md:top-0 md:self-start">
                 <div className="relative">
                   <div className="aspect-[4/5] md:aspect-[4/5] w-full overflow-hidden">

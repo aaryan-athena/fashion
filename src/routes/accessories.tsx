@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
-import { ACCESSORY_DEFINITIONS } from "@/lib/vault-data";
+import { ACCESSORY_DEFINITIONS, getVibesForAccessory, vibeSlug } from "@/lib/vault-data";
 import { ACCESSORY_META } from "@/lib/accessory-data";
 import { ProductPicker } from "@/components/ShopTheLook";
 
@@ -39,6 +39,7 @@ function AccessoriesPage() {
       name,
       def,
       cat: categorize(name),
+      vibes: getVibesForAccessory(name),
     }));
     return all
       .filter((i) => (filter === "All" ? true : i.cat === filter))
@@ -110,6 +111,23 @@ function AccessoriesPage() {
                     </p>
                   )}
                   <p className="text-sm text-muted-foreground leading-relaxed">{i.def}</p>
+                  {i.vibes.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-border/60">
+                      <div className="text-[9px] tracking-[0.25em] uppercase text-gold mb-2">Shows up in</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {i.vibes.map((vibe) => (
+                          <Link
+                            key={vibe}
+                            to="/vibes"
+                            hash={`vibe-${vibeSlug(vibe)}`}
+                            className="text-[10px] tracking-[0.15em] uppercase border border-border px-2 py-1 text-muted-foreground hover:border-gold hover:text-gold transition"
+                          >
+                            {vibe}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="mt-auto pt-3">
                     <ProductPicker accessory={i.name} />
                   </div>
