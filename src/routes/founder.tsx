@@ -19,7 +19,7 @@ function FounderPage() {
     <main className="min-h-screen text-foreground">
       <SiteHeader />
 
-      <section className="px-6 md:px-12 py-20 max-w-6xl mx-auto">
+      <section className="panel-solid my-16 border border-border px-6 md:px-12 py-16 max-w-6xl mx-auto">
         <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">Behind The Vault</p>
         <h1 className="text-5xl md:text-6xl font-light mb-12">Hi, I'm Akshin Chugh.</h1>
 

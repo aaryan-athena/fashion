@@ -24,27 +24,29 @@ function LookbookPage() {
     <main className="min-h-screen text-foreground">
       <SiteHeader />
       <section className="px-6 md:px-12 pt-16 pb-10 max-w-7xl mx-auto">
-        <p className="text-xs tracking-[0.3em] uppercase text-gold mb-4">Vol. 01 · The Lookbook</p>
-        <h1 className="text-5xl md:text-7xl font-light leading-[0.95] max-w-4xl">
-          Every vibe,
-          <span className="italic text-muted-foreground"> shot in its natural fit.</span>
-        </h1>
-        <p className="text-muted-foreground mt-6 max-w-2xl leading-relaxed">
-          Twenty-two editorial flat lays. Each one is a study — the metals, the textures, the surfaces — of a single vibe living the way it should.
-        </p>
+        <div className="panel border border-border p-6 md:p-10">
+          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-4">Vol. 01 · The Lookbook</p>
+          <h1 className="text-5xl md:text-7xl font-light leading-[0.95] max-w-4xl">
+            Every vibe,
+            <span className="italic text-foreground/60"> shot in its natural fit.</span>
+          </h1>
+          <p className="text-foreground/75 mt-6 max-w-2xl leading-relaxed">
+            Twenty-two editorial flat lays. Each one is a study — the metals, the textures, the surfaces — of a single vibe living the way it should.
+          </p>
 
-        <div className="flex border border-border w-fit mt-10">
-          {(["All", "Casual", "Formal"] as const).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-5 py-2.5 text-[11px] tracking-[0.25em] uppercase transition ${
-                filter === f ? "bg-foreground text-background" : "hover:bg-card"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          <div className="flex border border-border w-fit mt-10 bg-background/80">
+            {(["All", "Casual", "Formal"] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-5 py-2.5 text-[11px] tracking-[0.25em] uppercase transition ${
+                  filter === f ? "bg-foreground text-background" : "text-foreground/75 hover:bg-card hover:text-foreground"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -1,5 +1,12 @@
 // Brand + model + image for every accessory in the Vault.
 // Image paths are generated into src/assets/accessories/ as <slug>.jpg
+//
+// The six earring photos are licence-free stock, downloaded into assets so they
+// build and cache like the rest of the set rather than hotlinking a third party:
+//   stud    — pexels.com/photo/25403216      hoop   — pexels.com/photo/15799244
+//   huggie  — pexels.com/photo/15799478      cross  — pexels.com/photo/8377137
+//   drop    — unsplash.com/photos/1705326454933-9685fc6888e1
+//   pearl   — unsplash.com/photos/1682822749969-61a63203c501
 
 import cubanChain from "@/assets/accessories/cuban-chain.jpg";
 import sportyWatch from "@/assets/accessories/sporty-watch.jpg";
@@ -50,6 +57,12 @@ import beadedBracelet from "@/assets/accessories/beaded-bracelet.jpg";
 import shellNecklace from "@/assets/accessories/shell-necklace.jpg";
 import casualRing from "@/assets/accessories/casual-ring.jpg";
 import pearlNecklace from "@/assets/accessories/pearl-necklace.jpg";
+import studEarring from "@/assets/accessories/stud-earring.jpg";
+import hoopEarring from "@/assets/accessories/hoop-earring.jpg";
+import huggieEarring from "@/assets/accessories/huggie-earring.jpg";
+import dropEarring from "@/assets/accessories/drop-earring.jpg";
+import crossEarring from "@/assets/accessories/cross-earring.jpg";
+import pearlEarring from "@/assets/accessories/pearl-earring.jpg";
 
 export type AccessoryMeta = {
   brand: string;
@@ -107,6 +120,12 @@ export const ACCESSORY_META: Record<string, AccessoryMeta> = {
   "Shell Necklace": { brand: "Pura Vida", model: "Puka Shell 18\"", image: shellNecklace },
   "Casual Ring": { brand: "Tom Wood", model: "Slim Band Polished", image: casualRing },
   "Pearl Necklace": { brand: "Hatton Labs", model: "Baroque Pearl Strand", image: pearlNecklace },
+  "Stud Earring": { brand: "Tom Wood", model: "Solitaire Stud Silver", image: studEarring },
+  "Hoop Earring": { brand: "Serge DeNimes", model: "Serpent Hoop Silver", image: hoopEarring },
+  "Huggie Earring": { brand: "Vitaly", model: "Kolla Huggie Gunmetal", image: huggieEarring },
+  "Drop Earring": { brand: "Hatton Labs", model: "Teardrop Lever Gold", image: dropEarring },
+  "Cross Earring": { brand: "Serge DeNimes", model: "Cross Drop Silver", image: crossEarring },
+  "Pearl Earring": { brand: "Hatton Labs", model: "Pearl Stud Gold", image: pearlEarring },
 };
 
 export const getAccessoryMeta = (name: string): AccessoryMeta | undefined => {

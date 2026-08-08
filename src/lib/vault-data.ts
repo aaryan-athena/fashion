@@ -11,28 +11,28 @@ export type VibeEntry = {
 const split = (s: string) => s.split(",").map((x) => x.trim()).filter(Boolean);
 
 const raw: Array<[VibeEntry["outfitType"], string, string, string, string, string, string]> = [
-  ["Casual", "Streetwear", "Trendy urban style focused on oversized fits, cargos, sneakers, hoodies, and bold accessories.", "Silver, Black", "Bracelet, chunky ring", "Cuban chain, sporty watch", "Layered chain, statement watch"],
-  ["Casual", "Minimal", "Clean, simple outfits with neutral colors, few patterns, and subtle accessories.", "Matte Black, Silver", "Minimal bracelet, minimal ring", "Sleek watch, thin chain", "Clean bracelet"],
-  ["Formal", "Old Money", "Quiet luxury aesthetic with linen shirts, loafers, neutral tones, and elegant styling.", "Gold", "Thin bracelet, elegant ring", "Dress watch, signet ring", "Cufflinks"],
+  ["Casual", "Streetwear", "Trendy urban style focused on oversized fits, cargos, sneakers, hoodies, and bold accessories.", "Silver, Black", "Bracelet, chunky ring", "Cuban chain, sporty watch", "Layered chain, statement watch, hoop earring"],
+  ["Casual", "Minimal", "Clean, simple outfits with neutral colors, few patterns, and subtle accessories.", "Matte Black, Silver", "Minimal bracelet, minimal ring", "Sleek watch, thin chain", "Clean bracelet, stud earring"],
+  ["Formal", "Old Money", "Quiet luxury aesthetic with linen shirts, loafers, neutral tones, and elegant styling.", "Gold", "Thin bracelet, elegant ring", "Dress watch, signet ring", "Cufflinks, stud earring"],
   ["Formal", "Smart Casual", "Mix of formal and casual pieces like polos, trousers, clean sneakers, or loafers.", "Silver, Gold", "Subtle ring, leather bracelet", "Minimal watch", "Clean chain"],
   ["Formal", "Formal", "Professional or elegant dressing with suits, dress shirts, formal shoes, and refined accessories.", "Silver, Gold", "Cufflinks, elegant ring", "Dress watch", "Signet ring, thin bracelet"],
-  ["Formal", "Luxury", "High-end, statement-focused styling using premium fabrics, designer silhouettes, and bold jewellery.", "Gold, Rose Gold", "Statement ring, elegant bracelet", "Luxury watch, Cuban chain", "Cufflinks, signet ring"],
-  ["Casual", "Edgy", "Darker, more aggressive aesthetic using black fits, layered accessories, boots, and statement pieces.", "Black, Silver", "Layered ring, black bracelet", "Thick chain", "Dark ring"],
+  ["Formal", "Luxury", "High-end, statement-focused styling using premium fabrics, designer silhouettes, and bold jewellery.", "Gold, Rose Gold", "Statement ring, elegant bracelet", "Luxury watch, Cuban chain", "Cufflinks, signet ring, drop earring"],
+  ["Casual", "Edgy", "Darker, more aggressive aesthetic using black fits, layered accessories, boots, and statement pieces.", "Black, Silver", "Layered ring, black bracelet", "Thick chain", "Dark ring, cross earring"],
   ["Casual", "Casual", "Relaxed everyday wear like tees, jeans, sneakers, and light accessories.", "Silver", "Casual watch, leather bracelet", "Simple chain", "Casual ring"],
-  ["Casual", "Monochrome", "Outfit built mainly around one color family (usually black, white, grey, beige).", "Silver, Matte Black", "Clean chain, minimal ring", "Sleek watch", "Clean bracelet"],
+  ["Casual", "Monochrome", "Outfit built mainly around one color family (usually black, white, grey, beige).", "Silver, Matte Black", "Clean chain, minimal ring", "Sleek watch", "Clean bracelet, huggie earring"],
   ["Casual", "Sporty", "Athletic-inspired clothing such as joggers, jerseys, hoodies, and sneakers.", "Black, Silver", "Sporty bracelet, simple chain", "Smartwatch", "Casual watch"],
   ["Casual", "Rugged", "Masculine outdoor-inspired style using leather, boots, flannels, darker tones, and raw textures.", "Brown, Black, Silver", "Leather bracelet, textured ring", "Field watch", "Black bracelet"],
-  ["Casual", "Vintage", "Retro-inspired fashion influenced by older decades, often including washed colors and classic cuts.", "Gold, Silver", "Classic ring, rope chain", "Retro watch", "Signet ring"],
-  ["Casual", "Techwear", "Futuristic utility-focused style with tactical clothing, layered black/grey outfits, and functional accessories.", "Black, Gunmetal", "Matte chain, utility ring", "Tactical watch", "Smartwatch, black bracelet"],
-  ["Casual", "Grunge", "Messy layered aesthetic with oversized flannels, ripped jeans, darker tones, and rebellious styling.", "Silver, Black", "Chunky ring, distressed bracelet", "Layered chain", "Dark ring"],
+  ["Casual", "Vintage", "Retro-inspired fashion influenced by older decades, often including washed colors and classic cuts.", "Gold, Silver", "Classic ring, rope chain", "Retro watch", "Signet ring, stud earring"],
+  ["Casual", "Techwear", "Futuristic utility-focused style with tactical clothing, layered black/grey outfits, and functional accessories.", "Black, Gunmetal", "Matte chain, utility ring", "Tactical watch", "Smartwatch, black bracelet, huggie earring"],
+  ["Casual", "Grunge", "Messy layered aesthetic with oversized flannels, ripped jeans, darker tones, and rebellious styling.", "Silver, Black", "Chunky ring, distressed bracelet", "Layered chain", "Dark ring, hoop earring"],
   ["Formal", "Preppy", "Clean academic-inspired style using polos, sweaters, chinos, loafers, and structured fits.", "Gold, Silver", "Thin bracelet, elegant ring", "Dress watch", "Signet ring"],
-  ["Casual", "Y2K", "Early-2000s inspired fashion with baggy silhouettes, flashy accessories, graphic elements, and bold styling.", "Silver, Chrome", "Chunky ring, statement watch", "Flashy chain", "Sporty watch"],
-  ["Casual", "Goth", "Dark dramatic aesthetic using black clothing, silver jewellery, boots, and layered accessories.", "Silver, Black", "Layered chain, dark ring", "Cross pendant", "Black bracelet"],
+  ["Casual", "Y2K", "Early-2000s inspired fashion with baggy silhouettes, flashy accessories, graphic elements, and bold styling.", "Silver, Chrome", "Chunky ring, statement watch", "Flashy chain", "Sporty watch, hoop earring"],
+  ["Casual", "Goth", "Dark dramatic aesthetic using black clothing, silver jewellery, boots, and layered accessories.", "Silver, Black", "Layered chain, dark ring", "Cross pendant", "Black bracelet, cross earring"],
   ["Formal", "Business Casual", "Office-friendly outfits that are less formal than suits, often combining shirts, trousers, and clean shoes.", "Silver", "Subtle bracelet, clean ring", "Minimal watch", "Clean chain"],
-  ["Casual", "Partywear", "Attention-grabbing outfits designed for nightlife/events, often involving layered accessories and stronger contrasts.", "Gold, Silver", "Statement ring, flashy chain", "Bold watch, layered chain", "Cuban chain"],
+  ["Casual", "Partywear", "Attention-grabbing outfits designed for nightlife/events, often involving layered accessories and stronger contrasts.", "Gold, Silver", "Statement ring, flashy chain", "Bold watch, layered chain", "Cuban chain, drop earring"],
   ["Formal", "Summer Linen", "Light breathable outfits with linen shirts, relaxed trousers, loafers, and warm neutral colors.", "Gold", "Elegant bracelet, casual ring", "Dress watch, thin chain", "Signet ring"],
   ["Formal", "Clean Fit", "Extremely polished and balanced outfits with coordinated colors, fitted silhouettes, and minimal clutter.", "Silver, Matte Black", "Thin chain, clean bracelet", "Minimal watch", "Minimal ring"],
-  ["Casual", "Beachwear", "Relaxed vacation-style outfits designed for hot weather, typically including open shirts, linen pieces, shorts, slippers, and light breathable fabrics.", "Silver, White, Pearl, Light Gold", "Shell necklace, casual ring", "Beaded bracelet, thin chain", "Pearl necklace, minimal bracelet"],
+  ["Casual", "Beachwear", "Relaxed vacation-style outfits designed for hot weather, typically including open shirts, linen pieces, shorts, slippers, and light breathable fabrics.", "Silver, White, Pearl, Light Gold", "Shell necklace, casual ring", "Beaded bracelet, thin chain", "Pearl necklace, minimal bracelet, pearl earring"],
 ];
 
 export const VIBES: VibeEntry[] = raw.map(([outfitType, vibe, definition, colors, recommended, mostValuable, addOns]) => ({
@@ -112,6 +112,12 @@ export const ACCESSORY_DEFINITIONS: Record<string, string> = {
   "Shell Necklace": "A necklace featuring natural shells commonly associated with beach and tropical fashion.",
   "Casual Ring": "Simple rings that add style without appearing overly formal.",
   "Pearl Necklace": "A necklace strung with pearls — light, summery, and tonally warm.",
+  "Stud Earring": "A small fixed earring that sits flush to the lobe — the most understated way to wear metal on the face.",
+  "Hoop Earring": "A circular earring that frames the jaw and adds movement, reading bolder the wider it gets.",
+  "Huggie Earring": "A thick, small hoop that hugs the lobe closely — present without ever catching the eye first.",
+  "Drop Earring": "An earring that hangs below the lobe, adding vertical length and a deliberate sense of occasion.",
+  "Cross Earring": "A cross-shaped drop earring that carries the same symbolism as the pendant, worn higher.",
+  "Pearl Earring": "A pearl set on a stud or short hook — soft, warm-toned, and quietly unexpected on men.",
 };
 
 // Normalize "Cuban chains" / "chunky rings" / "shell/pearl necklaces" → canonical keys.

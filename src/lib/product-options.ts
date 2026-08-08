@@ -259,6 +259,36 @@ export const PRODUCT_OPTIONS: Record<string, ProductOption[]> = {
     { tier: "Mid", brand: "Salty", name: "Baroque Pearl Chain", price: "₹1,299", query: "salty pearl necklace men baroque" },
     { tier: "Premium", brand: "GIVA", name: "925 Silver Freshwater Pearl", price: "₹4,999", query: "giva pearl necklace men silver" },
   ],
+  "Stud Earring": [
+    { tier: "Budget", brand: "Fashion Frill", name: "Steel Cushion Stud Pair", price: "₹249", query: "fashion frill stud earring men steel" },
+    { tier: "Mid", brand: "Salty", name: "Anti-Tarnish Square Stud", price: "₹699", query: "salty stud earring men stainless steel" },
+    { tier: "Premium", brand: "GIVA", name: "925 Silver Solitaire Stud", price: "₹2,499", query: "giva 925 silver stud earring men" },
+  ],
+  "Hoop Earring": [
+    { tier: "Budget", brand: "OOMPH", name: "Silver-Tone Hoop 15mm", price: "₹299", query: "oomph hoop earring men silver" },
+    { tier: "Mid", brand: "Salty", name: "Chunky Hoop 20mm", price: "₹799", query: "salty hoop earring men chunky" },
+    { tier: "Premium", brand: "GIVA", name: "925 Silver Classic Hoop", price: "₹2,799", query: "giva 925 silver hoop earring men" },
+  ],
+  "Huggie Earring": [
+    { tier: "Budget", brand: "Fashion Frill", name: "Matte Black Huggie Pair", price: "₹299", query: "fashion frill huggie earring men black" },
+    { tier: "Mid", brand: "Salty", name: "Gunmetal Huggie Hoop", price: "₹749", query: "salty huggie earring men black steel" },
+    { tier: "Premium", brand: "Police", name: "Blackened Steel Huggie", price: "₹2,999", query: "police black huggie earring men" },
+  ],
+  "Drop Earring": [
+    { tier: "Budget", brand: "Yellow Chimes", name: "Gold-Tone Chain Drop", price: "₹399", query: "yellow chimes drop earring men gold" },
+    { tier: "Mid", brand: "Salty", name: "Chain Drop Earring Gold", price: "₹999", query: "salty drop earring men gold chain" },
+    { tier: "Premium", brand: "PALMONAS", name: "18k Gold-Plated Drop", price: "₹4,499", query: "palmonas gold plated drop earring" },
+  ],
+  "Cross Earring": [
+    { tier: "Budget", brand: "Fashion Frill", name: "Silver Cross Drop", price: "₹299", query: "fashion frill cross earring men silver" },
+    { tier: "Mid", brand: "Salty", name: "Gothic Cross Earring", price: "₹799", query: "salty cross earring men silver" },
+    { tier: "Premium", brand: "GIVA", name: "925 Silver Cross Earring", price: "₹2,899", query: "giva 925 silver cross earring men" },
+  ],
+  "Pearl Earring": [
+    { tier: "Budget", brand: "Fashion Frill", name: "Faux Pearl Stud Pair", price: "₹299", query: "pearl stud earring men" },
+    { tier: "Mid", brand: "Salty", name: "Baroque Pearl Drop", price: "₹899", query: "salty pearl earring men baroque" },
+    { tier: "Premium", brand: "GIVA", name: "925 Silver Freshwater Pearl Stud", price: "₹3,299", query: "giva pearl earring men silver" },
+  ],
 };
 
 // Same fuzzy fallback behaviour as getAccessoryMeta — last-word match.

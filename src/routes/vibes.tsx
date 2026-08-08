@@ -27,27 +27,29 @@ function VibesPage() {
     <main className="min-h-screen text-foreground">
       <SiteHeader />
       <section className="px-6 md:px-12 py-16 max-w-6xl mx-auto">
-        <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">The Library</p>
-        <h1 className="text-5xl md:text-6xl font-light mb-4">All 22 Vibes, defined.</h1>
-        <p className="text-muted-foreground max-w-2xl mb-10">A full glossary of every aesthetic in the Vault — what each vibe means, the metals it lives in, and the accessory edit that locks it in.</p>
+        <div className="panel border border-border p-6 md:p-8 mb-10">
+          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">The Library</p>
+          <h1 className="text-5xl md:text-6xl font-light mb-4">All 22 Vibes, defined.</h1>
+          <p className="text-foreground/75 max-w-2xl">A full glossary of every aesthetic in the Vault — what each vibe means, the metals it lives in, and the accessory edit that locks it in.</p>
 
-        <div className="flex border border-border w-fit mb-10">
-          {(["All", "Casual", "Formal"] as const).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-2 text-xs tracking-[0.25em] uppercase transition ${
-                filter === f ? "bg-foreground text-background" : "hover:bg-card"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          <div className="flex border border-border w-fit mt-8 bg-background/80">
+            {(["All", "Casual", "Formal"] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-4 py-2 text-xs tracking-[0.25em] uppercase transition ${
+                  filter === f ? "bg-foreground text-background" : "text-foreground/75 hover:bg-card hover:text-foreground"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-8">
           {list.map((v) => (
-            <article id={`vibe-${vibeSlug(v.vibe)}`} key={v.vibe} className="border border-border hover:border-gold-soft transition grid md:grid-cols-[320px_1fr] overflow-hidden bg-card/40 scroll-mt-24">
+            <article id={`vibe-${vibeSlug(v.vibe)}`} key={v.vibe} className="panel border border-border hover:border-gold-soft transition grid md:grid-cols-[320px_1fr] overflow-hidden scroll-mt-24">
               <div className="bg-card md:sticky md:top-0 md:self-start">
                 <div className="relative">
                   <div className="aspect-[4/5] md:aspect-[4/5] w-full overflow-hidden">
@@ -106,7 +108,7 @@ function VibesPage() {
                     ))}
                   </div>
                 </div>
-                <p className="text-muted-foreground leading-relaxed max-w-3xl mb-6">{v.definition}</p>
+                <p className="text-foreground/75 leading-relaxed max-w-3xl mb-6">{v.definition}</p>
 
                 {/* Accessory gallery — every recommended piece pictured */}
                 {(() => {

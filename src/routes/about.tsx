@@ -17,10 +17,10 @@ function AboutPage() {
   return (
     <main className="min-h-screen text-foreground">
       <SiteHeader />
-      <section className="px-6 md:px-12 py-20 max-w-3xl mx-auto">
+      <section className="panel-solid my-16 border border-border px-6 md:px-12 py-16 max-w-3xl mx-auto">
         <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">The Method</p>
         <h1 className="text-5xl md:text-6xl font-light mb-8">Accessories aren't decoration. They finish the fit.</h1>
-        <p className="text-lg text-muted-foreground leading-relaxed mb-12">
+        <p className="text-lg text-foreground/80 leading-relaxed mb-12">
           Most guys overthink the outfit and underthink the jewellery. The Vault flips that. You tell us the vibe — Old Money, Techwear, Streetwear, Goth — and we hand you a small, deliberate edit of pieces that actually belong on it.
         </p>
 
@@ -51,7 +51,7 @@ function AboutPage() {
               <div className="text-gold text-xs tracking-[0.3em] pt-2">{b.n}</div>
               <div>
                 <h2 className="text-2xl md:text-3xl font-light mb-3">{b.t}</h2>
-                <p className="text-muted-foreground leading-relaxed">{b.d}</p>
+                <p className="text-foreground/75 leading-relaxed">{b.d}</p>
               </div>
             </div>
           ))}

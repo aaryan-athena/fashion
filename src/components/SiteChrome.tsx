@@ -77,7 +77,7 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-card/30 mt-20">
+    <footer className="panel border-t border-border mt-20">
       <div className="px-6 md:px-12 py-14 grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div className="space-y-3">
           <div className="flex items-center gap-2.5">
@@ -85,7 +85,7 @@ export function SiteFooter() {
             <span className="text-sm tracking-[0.3em] uppercase">The Vault</span>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-            A vibe-first accessory atlas for men. 22 aesthetics, every chain, ring, watch and bracelet mapped to the fit it belongs in.
+            A vibe-first accessory atlas for men. 22 aesthetics, every chain, ring, watch, earring and bracelet mapped to the fit it belongs in.
           </p>
         </div>
         <FooterCol title="Explore" links={[

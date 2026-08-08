@@ -107,16 +107,18 @@ function JournalPage() {
       <SiteHeader />
 
       <section className="px-6 md:px-12 pt-16 pb-12 max-w-7xl mx-auto">
-        <p className="text-xs tracking-[0.3em] uppercase text-gold mb-4">The Journal</p>
-        <h1 className="text-5xl md:text-7xl font-light leading-[0.95] max-w-4xl">
-          Notes on metals, men,
-          <span className="italic text-muted-foreground"> and the rules behind a finished fit.</span>
-        </h1>
+        <div className="panel border border-border p-6 md:p-10">
+          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-4">The Journal</p>
+          <h1 className="text-5xl md:text-7xl font-light leading-[0.95] max-w-4xl">
+            Notes on metals, men,
+            <span className="italic text-foreground/60"> and the rules behind a finished fit.</span>
+          </h1>
+        </div>
       </section>
 
       {/* Hero entry */}
       <section className="px-6 md:px-12 pb-16 max-w-7xl mx-auto">
-        <article className="grid md:grid-cols-2 gap-8 lg:gap-14 border-t border-b border-border py-10">
+        <article className="panel grid md:grid-cols-2 gap-8 lg:gap-14 border border-border p-6 md:p-10">
           <div className="order-2 md:order-1 flex flex-col justify-center space-y-6">
             <div className="flex items-center gap-3 text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
               <span className="text-gold">Entry · {hero.number}</span>
@@ -126,9 +128,9 @@ function JournalPage() {
               <span>{hero.read} read</span>
             </div>
             <h2 className="font-display text-4xl md:text-5xl font-light leading-tight">{hero.title}</h2>
-            <p className="text-muted-foreground leading-relaxed text-lg">{hero.excerpt}</p>
+            <p className="text-foreground/80 leading-relaxed text-lg">{hero.excerpt}</p>
             {hero.body.map((p, i) => (
-              <p key={i} className="text-sm text-muted-foreground/90 leading-relaxed">{p}</p>
+              <p key={i} className="text-sm text-foreground/70 leading-relaxed">{p}</p>
             ))}
           </div>
           <div className="order-1 md:order-2 relative border border-gold-soft overflow-hidden">
@@ -139,10 +141,10 @@ function JournalPage() {
 
       {/* Grid */}
       <section className="px-6 md:px-12 pb-24 max-w-7xl mx-auto">
-        <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-6">More entries</div>
+        <div className="on-image text-[10px] tracking-[0.3em] uppercase text-gold mb-6">More entries</div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {rest.map((e) => (
-            <article key={e.number} className="group border border-border hover:border-gold-soft transition overflow-hidden flex flex-col">
+            <article key={e.number} className="panel group border border-border hover:border-gold-soft transition overflow-hidden flex flex-col">
               <div className="relative aspect-[4/3] bg-card overflow-hidden">
                 <img src={e.image} alt={e.title} width={768} height={576} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
@@ -153,7 +155,7 @@ function JournalPage() {
                 </div>
                 <div className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground">{e.category}</div>
                 <h3 className="font-display text-2xl leading-tight">{e.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed flex-1">{e.excerpt}</p>
+                <p className="text-sm text-foreground/75 leading-relaxed flex-1">{e.excerpt}</p>
                 <Link to="/vibes" className="text-[10px] tracking-[0.3em] uppercase text-gold pt-2">Read in vibes →</Link>
               </div>
             </article>

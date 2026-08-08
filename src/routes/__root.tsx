@@ -114,31 +114,33 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Solid base color (white in light, dark in dark) sits underneath the image */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-background" />
-      {/* Light-mode hero — same photo as dark mode, brightened and desaturated to read correctly against a light UI */}
-      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none dark:hidden">
+      {/* Light-mode hero — same photo as dark mode, brightened, desaturated and softly blurred so it
+          reads as texture behind the UI rather than as detail competing with the type */}
+      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none overflow-hidden dark:hidden">
         <img
           src={heroBg}
           alt=""
-          className="w-full h-full object-cover [filter:brightness(1.55)_contrast(0.92)_saturate(0.7)]"
+          className="w-full h-full object-cover scale-110 [filter:brightness(1.6)_contrast(0.85)_saturate(0.45)_blur(3px)]"
         />
-        <div className="absolute inset-0" style={{ backgroundColor: "hsl(40 30% 96%)", opacity: 0.45 }} />
+        <div className="absolute inset-0" style={{ backgroundColor: "hsl(40 30% 96%)", opacity: 0.7 }} />
       </div>
       {/* Dark-mode hero */}
-      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none hidden dark:block">
+      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none overflow-hidden hidden dark:block">
         <img
           src={heroBg}
           alt=""
-          className="w-full h-full object-cover [filter:brightness(0.85)_contrast(1.08)_saturate(0.95)]"
+          className="w-full h-full object-cover scale-110 [filter:brightness(0.6)_contrast(1.02)_saturate(0.7)_blur(3px)]"
         />
       </div>
 
-      {/* Tint overlay — dark wash in dark mode, light wash in light mode for legibility */}
+      {/* Tint overlay — dark wash in dark mode, light wash in light mode. Heavy enough that body copy
+          keeps its contrast ratio anywhere on the page, not just over the darker parts of the photo. */}
       <div
         aria-hidden
         className="fixed inset-0 z-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to bottom, color-mix(in oklab, var(--background) 30%, transparent), color-mix(in oklab, var(--background) 55%, transparent))",
+            "linear-gradient(to bottom, color-mix(in oklab, var(--background) 68%, transparent), color-mix(in oklab, var(--background) 86%, transparent))",
         }}
       />
 

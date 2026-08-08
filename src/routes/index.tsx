@@ -196,14 +196,15 @@ function Index() {
         <div className="relative z-10 max-w-4xl mx-auto w-full text-center space-y-6">
           <div className="inline-flex items-center gap-3 border border-gold bg-background/70 backdrop-blur px-3.5 sm:px-4 py-2 mx-auto rounded-sm shadow-sm max-w-[90vw]">
             <span className="h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
-            <p className="text-[9.5px] sm:text-xs tracking-[0.14em] sm:tracking-[0.32em] uppercase text-gold font-semibold leading-snug">Men's Accessories · Chains · Rings · Watches · Bracelets</p>
+            <p className="text-[9.5px] sm:text-xs tracking-[0.14em] sm:tracking-[0.32em] uppercase text-gold font-semibold leading-snug">Men's Accessories · Chains · Rings · Watches · Earrings</p>
           </div>
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl leading-[1.05] sm:leading-[0.95] font-medium text-foreground" style={{ textShadow: "0 2px 24px color-mix(in oklab, var(--background) 80%, transparent)" }}>
+          <h1 className="on-image text-4xl sm:text-6xl lg:text-7xl leading-[1.05] sm:leading-[0.95] font-medium text-foreground">
             Men's accessories,
             <span className="italic text-gold"> matched to your vibe.</span>
           </h1>
-          <p className="text-lg text-foreground/85 leading-relaxed max-w-2xl mx-auto" style={{ textShadow: "0 1px 14px color-mix(in oklab, var(--background) 80%, transparent)" }}>
-            Streetwear. Old money. Techwear. Tell us the energy — we hand you the chains, rings, watches and bracelets that finish the fit.
+          <p className="on-image text-lg text-foreground/90 leading-relaxed max-w-2xl mx-auto">
+            Streetwear. Old money. Techwear. Tell us the energy — we hand you the chains, rings, watches, earrings and
+            bracelets that finish the fit.
           </p>
 
           {/* Search */}
@@ -391,7 +392,7 @@ function Index() {
       </section>
 
       {/* Result */}
-      <section id="result" className="border-t border-border bg-card/40 py-20 md:py-24 px-6 md:px-12">
+      <section id="result" className="panel border-t border-border py-20 md:py-24 px-6 md:px-12">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
             <div>
@@ -482,7 +483,7 @@ function Index() {
       </section>
 
       {/* Mix & Match — build a custom vibe from 2–3 existing ones */}
-      <section id="mix" className="px-6 md:px-12 py-24 md:py-28 border-t border-border bg-card/30">
+      <section id="mix" className="panel px-6 md:px-12 py-24 md:py-28 border-t border-border">
         <div className="max-w-6xl mx-auto">
           <p className="text-xs tracking-[0.3em] uppercase text-gold mb-4 font-semibold">Build your own</p>
           <h2 className="text-6xl sm:text-7xl md:text-8xl leading-[0.95] font-medium mb-5">
@@ -576,7 +577,7 @@ function Index() {
       </section>
 
       {/* Browse */}
-      <section id="browse" className="px-6 md:px-12 py-20">
+      <section id="browse" className="panel border-t border-border px-6 md:px-12 py-20">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
             <div>
@@ -642,7 +643,7 @@ function Index() {
       </section>
 
       {/* Method */}
-      <section id="atelier" className="border-t border-border px-6 md:px-12 py-20">
+      <section id="atelier" className="panel border-t border-border px-6 md:px-12 py-20">
         <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-12">
           {[
             { n: "01", t: "Vibe-mapped", d: "Every accessory is mapped to a vibe — no guessing what works with what." },
