@@ -1,12 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
+import { useDrawer } from "@/lib/drawer";
 
 const NAV_LINKS: { to: string; label: string; exact?: boolean }[] = [
   { to: "/", label: "Finder", exact: true },
   { to: "/vibes", label: "Vibes" },
   { to: "/lookbook", label: "Lookbook" },
   { to: "/accessories", label: "Accessories" },
+  { to: "/drawer", label: "My Drawer" },
   { to: "/journal", label: "Journal" },
   { to: "/about", label: "The Method" },
   { to: "/founder", label: "Founder" },
@@ -14,6 +16,10 @@ const NAV_LINKS: { to: string; label: string; exact?: boolean }[] = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const { count, ready } = useDrawer();
+  // Only render the badge once storage has been read, so the server markup and
+  // the first client paint match.
+  const badge = ready && count > 0 ? count : null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
@@ -29,9 +35,10 @@ export function SiteHeader() {
               to={l.to}
               activeOptions={l.exact ? { exact: true } : undefined}
               activeProps={{ className: "text-foreground" }}
-              className="hover:text-foreground transition"
+              className="hover:text-foreground transition whitespace-nowrap"
             >
               {l.label}
+              {l.to === "/drawer" && badge !== null && <span className="text-gold ml-1">({badge})</span>}
             </Link>
           ))}
         </nav>
@@ -67,6 +74,7 @@ export function SiteHeader() {
               className="text-xs tracking-[0.22em] uppercase text-muted-foreground hover:text-foreground transition py-3.5 border-b border-border/60 last:border-b-0"
             >
               {l.label}
+              {l.to === "/drawer" && badge !== null && <span className="text-gold ml-1">({badge})</span>}
             </Link>
           ))}
         </nav>
@@ -92,6 +100,7 @@ export function SiteFooter() {
           { to: "/", label: "Finder" },
           { to: "/vibes", label: "All Vibes" },
           { to: "/lookbook", label: "Lookbook" },
+          { to: "/drawer", label: "My Drawer" },
         ]} />
         <FooterCol title="Learn" links={[
           { to: "/accessories", label: "Accessory Index" },

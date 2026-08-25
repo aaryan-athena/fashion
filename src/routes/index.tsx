@@ -2,12 +2,15 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import heroImg from "@/assets/hero-jewels.jpg";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
-import { VIBES, colorToHex, lookupAccessoryDefinition, type VibeEntry } from "@/lib/vault-data";
+import { VIBES, colorToHex, lookupAccessoryDefinition, vibeSlug, type VibeEntry } from "@/lib/vault-data";
 import { vibeImage } from "@/lib/vibe-images";
 import { getAccessoryMeta } from "@/lib/accessory-data";
 import { ProductPicker, ClothingRail } from "@/components/ShopTheLook";
 import { blendVibes, MAX_MIX, MIN_MIX } from "@/lib/vibe-mixer";
 import { aiVibeSearch, type AiVibeSearchResponse } from "@/lib/api/groq-search.functions";
+import { OCCASIONS, occasionAgainstDrawer } from "@/lib/occasions";
+import { LookCheck, OwnToggle } from "@/components/Drawer";
+import { useDrawer } from "@/lib/drawer";
 
 
 export const Route = createFileRoute("/")({
@@ -68,6 +71,7 @@ const CURATED_VIBE_NAMES = ["Streetwear", "Old Money", "Techwear", "Luxury", "Mi
 const SECTION_NAV_ITEMS = [
   { id: "hero-top", label: "Search" },
   { id: "result", label: "Your Edit" },
+  { id: "occasion", label: "Occasions" },
   { id: "mix", label: "Mix & Match" },
   { id: "browse", label: "Browse" },
   { id: "atelier", label: "Method" },
@@ -175,6 +179,14 @@ function Index() {
     () => (filter === "All" ? VIBES : VIBES.filter((v) => v.outfitType === filter)),
     [filter]
   );
+
+  const [occasionSlug, setOccasionSlug] = useState<string>(OCCASIONS[0].slug);
+  const { owned, count: drawerCount, ready: drawerReady } = useDrawer();
+  const occasion = useMemo(
+    () => OCCASIONS.find((o) => o.slug === occasionSlug) ?? OCCASIONS[0],
+    [occasionSlug],
+  );
+  const occasionEdit = useMemo(() => occasionAgainstDrawer(occasion, owned), [occasion, owned]);
 
   const [mixVibes, setMixVibes] = useState<string[]>([]);
   const blended = useMemo(() => blendVibes(mixVibes), [mixVibes]);
@@ -482,6 +494,174 @@ function Index() {
         </div>
       </section>
 
+      {/* Occasions — the same drawer, judged against a real dress code */}
+      <section id="occasion" className="panel border-t border-border px-6 md:px-12 py-24 md:py-28">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-4 font-semibold">Where are you going?</p>
+          <h2 className="text-5xl sm:text-6xl md:text-7xl leading-[0.98] font-medium mb-5">
+            Occasion <span className="italic text-gold">intelligence</span>
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mb-8 leading-relaxed text-lg">
+            Most men don't lack accessories — they lack the read on when formality actually matters. Pick
+            where you're going and the same catalog answers differently.
+          </p>
+
+          <div className="flex flex-wrap gap-2 mb-8">
+            {OCCASIONS.map((o) => (
+              <button
+                key={o.slug}
+                onClick={() => setOccasionSlug(o.slug)}
+                className={`text-xs tracking-[0.16em] uppercase border px-3.5 py-2 transition ${
+                  o.slug === occasionSlug
+                    ? "border-gold bg-gold/20 text-gold"
+                    : "border-border text-foreground/80 hover:border-gold-soft hover:text-foreground"
+                }`}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="border border-gold-soft bg-background/50 p-6 md:p-8 space-y-8">
+            <div>
+              <h3 className="font-display text-3xl md:text-4xl font-light">{occasion.label}</h3>
+              <p className="text-foreground/80 leading-relaxed max-w-3xl mt-3">{occasion.blurb}</p>
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4">
+                <span className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground">
+                  Drawn from{" "}
+                  {occasionEdit.sourceVibes.map((v, idx) => (
+                    <span key={v}>
+                      {idx > 0 && " × "}
+                      <Link
+                        to="/vibes"
+                        hash={`vibe-${vibeSlug(v)}`}
+                        className="text-gold hover:underline normal-case tracking-normal"
+                      >
+                        {v}
+                      </Link>
+                    </span>
+                  ))}
+                </span>
+                {occasionEdit.palette.length > 0 && (
+                  <span className="flex items-center gap-2">
+                    {occasionEdit.palette.map((c) => (
+                      <span
+                        key={c}
+                        title={c}
+                        className="h-4 w-4 border border-border"
+                        style={{ backgroundColor: colorToHex(c) }}
+                      />
+                    ))}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* What to wear */}
+            <div className="border-t border-border/60 pt-6">
+              <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-4">
+                Right for this — {occasionEdit.pieces.length} pieces
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {occasionEdit.pieces.map((p) => {
+                  const meta = getAccessoryMeta(p);
+                  const have = drawerReady && owned.has(p);
+                  return (
+                    <div
+                      key={p}
+                      className={`border p-3 flex gap-3 ${have ? "border-gold-soft bg-gold/5" : "border-border"}`}
+                    >
+                      {meta?.image && (
+                        <img
+                          src={meta.image}
+                          alt={p}
+                          width={80}
+                          height={80}
+                          loading="lazy"
+                          className="w-16 h-16 object-cover shrink-0 border border-border/60"
+                        />
+                      )}
+                      <div className="min-w-0">
+                        <div className="font-display text-base leading-tight">{p}</div>
+                        {have ? (
+                          <div className="text-[10px] tracking-[0.2em] uppercase text-gold mt-1">
+                            ✓ In your drawer
+                          </div>
+                        ) : (
+                          <div className="mt-1.5">
+                            <OwnToggle accessory={p} size="xs" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Ruled out — the teaching half */}
+            {occasionEdit.excluded.length > 0 && (
+              <div className="border-t border-border/60 pt-6">
+                <div className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-3">
+                  Leave at home
+                </div>
+                <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-1.5">
+                  {occasionEdit.excluded.map((x) => (
+                    <li key={x.piece} className="text-sm text-muted-foreground">
+                      <span className="text-foreground/70 line-through decoration-muted-foreground/40">
+                        {x.piece}
+                      </span>{" "}
+                      — {x.reason}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Against the drawer */}
+            {drawerReady && drawerCount > 0 && (
+              <div className="border-t border-border/60 pt-6 space-y-6">
+                <div>
+                  <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-2">
+                    From your drawer
+                  </div>
+                  {occasionEdit.haveIt.length > 0 ? (
+                    <p className="text-sm text-foreground/85 leading-relaxed">
+                      You already own {occasionEdit.haveIt.length} of these:{" "}
+                      <span className="text-foreground">{occasionEdit.haveIt.join(" · ")}</span>.
+                      {occasionEdit.needIt.length > 0 && (
+                        <>
+                          {" "}
+                          Closest gap:{" "}
+                          <Link to="/drawer" className="text-gold hover:underline">
+                            {occasionEdit.needIt[0]}
+                          </Link>
+                          .
+                        </>
+                      )}
+                    </p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Nothing in your drawer fits this occasion yet —{" "}
+                      <Link to="/drawer" className="text-gold hover:underline">
+                        see what to buy first
+                      </Link>
+                      .
+                    </p>
+                  )}
+                </div>
+                {occasionEdit.haveIt.length >= 2 && (
+                  <LookCheck
+                    pieces={occasionEdit.haveIt}
+                    heading="Wearing your own pieces together — any problems?"
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* Mix & Match — build a custom vibe from 2–3 existing ones */}
       <section id="mix" className="panel px-6 md:px-12 py-24 md:py-28 border-t border-border">
         <div className="max-w-6xl mx-auto">
@@ -566,6 +746,15 @@ function Index() {
                 <Block label="Most valuable" subtitle="One hero per vibe" items={blended.mostValuable} accent />
                 <Block label="Recommended" subtitle="The blended edit" items={blended.recommended} />
                 <Block label="Add-ons" subtitle="Layer them in" items={blended.addOns} />
+              </div>
+
+              {/* Blending two aesthetics is exactly where metals and weights start
+                  to fight, so the check belongs here rather than as an afterthought. */}
+              <div className="border-t border-border/60 pt-6">
+                <LookCheck
+                  pieces={blended.mostValuable.map((p) => lookupAccessoryDefinition(p).name)}
+                  heading="Wearing these heroes together"
+                />
               </div>
 
               <div className="border-t border-border/60 pt-6">

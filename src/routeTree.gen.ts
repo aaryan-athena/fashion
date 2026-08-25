@@ -13,6 +13,7 @@ import { Route as VibesRouteImport } from './routes/vibes'
 import { Route as LookbookRouteImport } from './routes/lookbook'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as FounderRouteImport } from './routes/founder'
+import { Route as DrawerRouteImport } from './routes/drawer'
 import { Route as AccessoriesRouteImport } from './routes/accessories'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -37,6 +38,11 @@ const FounderRoute = FounderRouteImport.update({
   path: '/founder',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DrawerRoute = DrawerRouteImport.update({
+  id: '/drawer',
+  path: '/drawer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccessoriesRoute = AccessoriesRouteImport.update({
   id: '/accessories',
   path: '/accessories',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/accessories': typeof AccessoriesRoute
+  '/drawer': typeof DrawerRoute
   '/founder': typeof FounderRoute
   '/journal': typeof JournalRoute
   '/lookbook': typeof LookbookRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/accessories': typeof AccessoriesRoute
+  '/drawer': typeof DrawerRoute
   '/founder': typeof FounderRoute
   '/journal': typeof JournalRoute
   '/lookbook': typeof LookbookRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/accessories': typeof AccessoriesRoute
+  '/drawer': typeof DrawerRoute
   '/founder': typeof FounderRoute
   '/journal': typeof JournalRoute
   '/lookbook': typeof LookbookRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/accessories'
+    | '/drawer'
     | '/founder'
     | '/journal'
     | '/lookbook'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/accessories'
+    | '/drawer'
     | '/founder'
     | '/journal'
     | '/lookbook'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/accessories'
+    | '/drawer'
     | '/founder'
     | '/journal'
     | '/lookbook'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AccessoriesRoute: typeof AccessoriesRoute
+  DrawerRoute: typeof DrawerRoute
   FounderRoute: typeof FounderRoute
   JournalRoute: typeof JournalRoute
   LookbookRoute: typeof LookbookRoute
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FounderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/drawer': {
+      id: '/drawer'
+      path: '/drawer'
+      fullPath: '/drawer'
+      preLoaderRoute: typeof DrawerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/accessories': {
       id: '/accessories'
       path: '/accessories'
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AccessoriesRoute: AccessoriesRoute,
+  DrawerRoute: DrawerRoute,
   FounderRoute: FounderRoute,
   JournalRoute: JournalRoute,
   LookbookRoute: LookbookRoute,

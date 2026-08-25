@@ -4,6 +4,8 @@ import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 import { ACCESSORY_DEFINITIONS, getVibesForAccessory, vibeSlug } from "@/lib/vault-data";
 import { ACCESSORY_META } from "@/lib/accessory-data";
 import { ProductPicker } from "@/components/ShopTheLook";
+import { OwnToggle } from "@/components/Drawer";
+import { CATEGORIES, categorize, type Cat } from "@/lib/accessory-category";
 
 
 export const Route = createFileRoute("/accessories")({
@@ -17,20 +19,6 @@ export const Route = createFileRoute("/accessories")({
   }),
   component: AccessoriesPage,
 });
-
-const CATEGORIES = ["All", "Chain", "Ring", "Watch", "Bracelet", "Earring", "Other"] as const;
-type Cat = (typeof CATEGORIES)[number];
-
-function categorize(name: string): Cat {
-  const n = name.toLowerCase();
-  // Earrings first — "Cross Earring" would otherwise be swallowed by the chain rule.
-  if (n.includes("earring")) return "Earring";
-  if (n.includes("chain") || n.includes("necklace") || n.includes("pendant")) return "Chain";
-  if (n.includes("ring")) return "Ring";
-  if (n.includes("watch")) return "Watch";
-  if (n.includes("bracelet")) return "Bracelet";
-  return "Other";
-}
 
 function AccessoriesPage() {
   const [filter, setFilter] = useState<Cat>("All");
@@ -62,7 +50,12 @@ function AccessoriesPage() {
           <h1 className="text-5xl md:text-6xl font-light mb-4">Accessory Glossary.</h1>
           <p className="text-foreground/75 max-w-2xl">
             Every piece in the Vault, defined. What it is, what it does for a fit, and which vibes it shows up in —
-            chains, rings, watches, bracelets and earrings.
+            chains, rings, watches, bracelets and earrings. Tap{" "}
+            <span className="text-gold">“I own this”</span> on anything you already have and{" "}
+            <Link to="/drawer" className="text-gold hover:underline">
+              your drawer
+            </Link>{" "}
+            will tell you what to buy next.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 mt-8">
@@ -137,7 +130,8 @@ function AccessoriesPage() {
                       </div>
                     </div>
                   )}
-                  <div className="mt-auto pt-3">
+                  <div className="mt-auto pt-3 space-y-2">
+                    <OwnToggle accessory={i.name} />
                     <ProductPicker accessory={i.name} />
                   </div>
                 </div>
