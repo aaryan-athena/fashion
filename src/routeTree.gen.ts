@@ -9,23 +9,48 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as VibesRouteImport } from './routes/vibes'
+import { Route as StartRouteImport } from './routes/start'
+import { Route as MakersRouteImport } from './routes/makers'
 import { Route as LookbookRouteImport } from './routes/lookbook'
+import { Route as LearnRouteImport } from './routes/learn'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as FounderRouteImport } from './routes/founder'
 import { Route as DrawerRouteImport } from './routes/drawer'
+import { Route as CuratedRouteImport } from './routes/curated'
 import { Route as AccessoriesRouteImport } from './routes/accessories'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WishlistRoute = WishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VibesRoute = VibesRouteImport.update({
   id: '/vibes',
   path: '/vibes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StartRoute = StartRouteImport.update({
+  id: '/start',
+  path: '/start',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MakersRoute = MakersRouteImport.update({
+  id: '/makers',
+  path: '/makers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LookbookRoute = LookbookRouteImport.update({
   id: '/lookbook',
   path: '/lookbook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JournalRoute = JournalRouteImport.update({
@@ -41,6 +66,11 @@ const FounderRoute = FounderRouteImport.update({
 const DrawerRoute = DrawerRouteImport.update({
   id: '/drawer',
   path: '/drawer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CuratedRoute = CuratedRouteImport.update({
+  id: '/curated',
+  path: '/curated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccessoriesRoute = AccessoriesRouteImport.update({
@@ -63,32 +93,47 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/accessories': typeof AccessoriesRoute
+  '/curated': typeof CuratedRoute
   '/drawer': typeof DrawerRoute
   '/founder': typeof FounderRoute
   '/journal': typeof JournalRoute
+  '/learn': typeof LearnRoute
   '/lookbook': typeof LookbookRoute
+  '/makers': typeof MakersRoute
+  '/start': typeof StartRoute
   '/vibes': typeof VibesRoute
+  '/wishlist': typeof WishlistRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/accessories': typeof AccessoriesRoute
+  '/curated': typeof CuratedRoute
   '/drawer': typeof DrawerRoute
   '/founder': typeof FounderRoute
   '/journal': typeof JournalRoute
+  '/learn': typeof LearnRoute
   '/lookbook': typeof LookbookRoute
+  '/makers': typeof MakersRoute
+  '/start': typeof StartRoute
   '/vibes': typeof VibesRoute
+  '/wishlist': typeof WishlistRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/accessories': typeof AccessoriesRoute
+  '/curated': typeof CuratedRoute
   '/drawer': typeof DrawerRoute
   '/founder': typeof FounderRoute
   '/journal': typeof JournalRoute
+  '/learn': typeof LearnRoute
   '/lookbook': typeof LookbookRoute
+  '/makers': typeof MakersRoute
+  '/start': typeof StartRoute
   '/vibes': typeof VibesRoute
+  '/wishlist': typeof WishlistRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -96,46 +141,73 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/accessories'
+    | '/curated'
     | '/drawer'
     | '/founder'
     | '/journal'
+    | '/learn'
     | '/lookbook'
+    | '/makers'
+    | '/start'
     | '/vibes'
+    | '/wishlist'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/accessories'
+    | '/curated'
     | '/drawer'
     | '/founder'
     | '/journal'
+    | '/learn'
     | '/lookbook'
+    | '/makers'
+    | '/start'
     | '/vibes'
+    | '/wishlist'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/accessories'
+    | '/curated'
     | '/drawer'
     | '/founder'
     | '/journal'
+    | '/learn'
     | '/lookbook'
+    | '/makers'
+    | '/start'
     | '/vibes'
+    | '/wishlist'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AccessoriesRoute: typeof AccessoriesRoute
+  CuratedRoute: typeof CuratedRoute
   DrawerRoute: typeof DrawerRoute
   FounderRoute: typeof FounderRoute
   JournalRoute: typeof JournalRoute
+  LearnRoute: typeof LearnRoute
   LookbookRoute: typeof LookbookRoute
+  MakersRoute: typeof MakersRoute
+  StartRoute: typeof StartRoute
   VibesRoute: typeof VibesRoute
+  WishlistRoute: typeof WishlistRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wishlist': {
+      id: '/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof WishlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vibes': {
       id: '/vibes'
       path: '/vibes'
@@ -143,11 +215,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VibesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/start': {
+      id: '/start'
+      path: '/start'
+      fullPath: '/start'
+      preLoaderRoute: typeof StartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/makers': {
+      id: '/makers'
+      path: '/makers'
+      fullPath: '/makers'
+      preLoaderRoute: typeof MakersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lookbook': {
       id: '/lookbook'
       path: '/lookbook'
       fullPath: '/lookbook'
       preLoaderRoute: typeof LookbookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/journal': {
@@ -169,6 +262,13 @@ declare module '@tanstack/react-router' {
       path: '/drawer'
       fullPath: '/drawer'
       preLoaderRoute: typeof DrawerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/curated': {
+      id: '/curated'
+      path: '/curated'
+      fullPath: '/curated'
+      preLoaderRoute: typeof CuratedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/accessories': {
@@ -199,11 +299,16 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AccessoriesRoute: AccessoriesRoute,
+  CuratedRoute: CuratedRoute,
   DrawerRoute: DrawerRoute,
   FounderRoute: FounderRoute,
   JournalRoute: JournalRoute,
+  LearnRoute: LearnRoute,
   LookbookRoute: LookbookRoute,
+  MakersRoute: MakersRoute,
+  StartRoute: StartRoute,
   VibesRoute: VibesRoute,
+  WishlistRoute: WishlistRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

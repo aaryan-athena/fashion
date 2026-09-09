@@ -5,7 +5,7 @@ import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 import { VIBES, colorToHex, lookupAccessoryDefinition, vibeSlug, type VibeEntry } from "@/lib/vault-data";
 import { vibeImage } from "@/lib/vibe-images";
 import { getAccessoryMeta } from "@/lib/accessory-data";
-import { ProductPicker, ClothingRail } from "@/components/ShopTheLook";
+import { ProductPicker, ClothingRail, MakerLine } from "@/components/ShopTheLook";
 import { blendVibes, MAX_MIX, MIN_MIX } from "@/lib/vibe-mixer";
 import { aiVibeSearch, type AiVibeSearchResponse } from "@/lib/api/groq-search.functions";
 import { OCCASIONS, occasionAgainstDrawer } from "@/lib/occasions";
@@ -216,11 +216,37 @@ function Index() {
           </h1>
           <p className="on-image text-lg text-foreground/90 leading-relaxed max-w-2xl mx-auto">
             Streetwear. Old money. Techwear. Tell us the energy — we hand you the chains, rings, watches, earrings and
-            bracelets that finish the fit.
+            bracelets that finish the fit, from independent Indian makers.
           </p>
 
+          {/*
+            Three doors, because the search box below only works for people who
+            already know what a vibe is. Someone who has never worn jewellery
+            needs the questionnaire or the guide, not a text field.
+          */}
+          <div data-tour="doors" className="flex flex-wrap justify-center gap-2 pt-1">
+            <Link
+              to="/start"
+              className="text-[11px] tracking-[0.2em] uppercase border border-gold bg-background/70 backdrop-blur px-4 py-2.5 text-gold hover:bg-gold hover:text-background transition"
+            >
+              Never worn any? Start here →
+            </Link>
+            <Link
+              to="/learn"
+              className="text-[11px] tracking-[0.2em] uppercase border border-border bg-background/60 backdrop-blur px-4 py-2.5 text-foreground/85 hover:border-gold hover:text-gold transition"
+            >
+              Learn the rules
+            </Link>
+            <Link
+              to="/wishlist"
+              className="text-[11px] tracking-[0.2em] uppercase border border-border bg-background/60 backdrop-blur px-4 py-2.5 text-foreground/85 hover:border-gold hover:text-gold transition"
+            >
+              Match my wishlist
+            </Link>
+          </div>
+
           {/* Search */}
-          <div className="space-y-3 max-w-xl mx-auto">
+          <div data-tour="search" className="space-y-3 max-w-xl mx-auto">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -837,7 +863,11 @@ function Index() {
           {[
             { n: "01", t: "Vibe-mapped", d: "Every accessory is mapped to a vibe — no guessing what works with what." },
             { n: "02", t: "Hero + Layer", d: "We name the hero piece first, then what to layer in. Build, don't pile." },
-            { n: "03", t: "Metals that match", d: "Colour palette per vibe, so the metals never fight the fit." },
+            {
+              n: "03",
+              t: "Homegrown only",
+              d: "Every piece points at an independent Indian maker's own store — not a marketplace listing, and not a brand you've already heard of.",
+            },
           ].map((b) => (
             <div key={b.n} className="space-y-3">
               <div className="text-gold text-xs tracking-[0.3em]">{b.n}</div>
@@ -847,8 +877,14 @@ function Index() {
           ))}
         </div>
         <div className="max-w-5xl mx-auto mt-12 flex flex-wrap gap-3">
-          <Link to="/about" className="text-xs tracking-[0.3em] uppercase border border-gold px-5 py-3 hover:bg-gold hover:text-background transition">
-            Read the full method →
+          <Link to="/makers" className="text-xs tracking-[0.3em] uppercase border border-gold px-5 py-3 hover:bg-gold hover:text-background transition">
+            Meet the makers →
+          </Link>
+          <Link to="/curated" className="text-xs tracking-[0.3em] uppercase border border-border px-5 py-3 hover:border-gold transition">
+            Curated edits
+          </Link>
+          <Link to="/about" className="text-xs tracking-[0.3em] uppercase border border-border px-5 py-3 hover:border-gold transition">
+            The full method
           </Link>
           <Link to="/accessories" className="text-xs tracking-[0.3em] uppercase border border-border px-5 py-3 hover:border-gold transition">
             Accessory glossary
@@ -897,12 +933,9 @@ function Block({ label, subtitle, items, accent = false }: { label: string; subt
               )}
               <div>
                 <div className="font-display text-base leading-snug">{name}</div>
-                {meta && (
-                  <div className="text-[10px] tracking-[0.18em] uppercase mt-1 break-words">
-                    <span className="text-foreground/80">{meta.brand}</span>
-                    <span className="text-muted-foreground/70"> · {meta.model}</span>
-                  </div>
-                )}
+                <div className="mt-1 break-words">
+                  <MakerLine accessory={name} />
+                </div>
                 {definition && (
                   <p className="text-xs text-muted-foreground leading-relaxed mt-1.5">{definition}</p>
                 )}

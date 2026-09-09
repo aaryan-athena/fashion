@@ -1,18 +1,43 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
+import { Home } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { TourButton } from "./Tour";
 import { useDrawer } from "@/lib/drawer";
 
-const NAV_LINKS: { to: string; label: string; exact?: boolean }[] = [
+type NavLink = { to: string; label: string; exact?: boolean };
+
+/**
+ * The full map, used by the mobile drawer and the footer.
+ *
+ * Ordered as a newcomer would need it: the two ways in (Start Here, Learn)
+ * before the browsing surfaces, since the platform's problem is people who
+ * don't yet know they want jewellery.
+ */
+const NAV_LINKS: NavLink[] = [
   { to: "/", label: "Finder", exact: true },
+  { to: "/start", label: "Start Here" },
+  { to: "/learn", label: "Learn" },
+  { to: "/wishlist", label: "Wishlist Match" },
+  { to: "/makers", label: "Makers" },
+  { to: "/curated", label: "Edits" },
   { to: "/vibes", label: "Vibes" },
-  { to: "/lookbook", label: "Lookbook" },
   { to: "/accessories", label: "Accessories" },
   { to: "/drawer", label: "My Drawer" },
+  { to: "/lookbook", label: "Lookbook" },
   { to: "/journal", label: "Journal" },
   { to: "/about", label: "The Method" },
   { to: "/founder", label: "Founder" },
 ];
+
+/**
+ * Desktop bar. Thirteen links don't fit on one row at any sane font size, so
+ * this is the subset; everything else stays one tap away in the mobile menu
+ * and in the footer.
+ */
+const PRIMARY_NAV: NavLink[] = NAV_LINKS.filter((l) =>
+  ["/start", "/learn", "/makers", "/curated", "/vibes", "/drawer"].includes(l.to),
+);
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -20,6 +45,10 @@ export function SiteHeader() {
   // Only render the badge once storage has been read, so the server markup and
   // the first client paint match.
   const badge = ready && count > 0 ? count : null;
+
+  // The wordmark already links home, but it doesn't read as a control. On any
+  // page other than the finder, give people an explicit way back.
+  const onHome = useLocation({ select: (l) => l.pathname === "/" });
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
@@ -29,7 +58,7 @@ export function SiteHeader() {
           <span className="text-sm tracking-[0.3em] uppercase truncate">The Vault</span>
         </Link>
         <nav className="hidden lg:flex min-w-0 gap-5 xl:gap-9 text-[10px] xl:text-[11px] tracking-[0.2em] xl:tracking-[0.25em] uppercase text-muted-foreground">
-          {NAV_LINKS.map((l) => (
+          {PRIMARY_NAV.map((l) => (
             <Link
               key={l.to}
               to={l.to}
@@ -43,6 +72,18 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-3 shrink-0">
+          {!onHome && (
+            <Link
+              to="/"
+              aria-label="Back to the finder"
+              title="Back to the finder"
+              onClick={() => setOpen(false)}
+              className="inline-flex items-center justify-center h-8 w-8 border border-border hover:border-gold hover:text-gold transition shrink-0"
+            >
+              <Home className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          )}
+          <TourButton />
           <ThemeToggle />
           <Link to="/vibes" className="hidden sm:inline-block lg:hidden text-[11px] tracking-[0.25em] uppercase border-b border-gold pb-0.5 hover:text-gold transition">
             Browse
@@ -86,41 +127,31 @@ export function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="panel border-t border-border mt-20">
-      <div className="px-6 md:px-12 py-14 grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div className="px-6 md:px-12 py-14 grid gap-10 md:grid-cols-[1.6fr_1fr_1fr]">
         <div className="space-y-3">
           <div className="flex items-center gap-2.5">
             <div className="h-2 w-2 rounded-full bg-gold" />
             <span className="text-sm tracking-[0.3em] uppercase">The Vault</span>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-            A vibe-first accessory atlas for men. 22 aesthetics, every chain, ring, watch, earring and bracelet mapped to the fit it belongs in.
+            A vibe-first accessory guide for men, pointing at independent Indian makers rather than
+            marketplace listings. Every chain, ring, watch, earring and bracelet mapped to the fit
+            it belongs in.
           </p>
         </div>
-        <FooterCol title="Explore" links={[
-          { to: "/", label: "Finder" },
+        <FooterCol title="Start" links={[
+          { to: "/start", label: "Four Questions" },
+          { to: "/learn", label: "Accessories, Explained" },
+          { to: "/wishlist", label: "Wishlist Match" },
+          { to: "/", label: "Vibe Finder" },
+        ]} />
+        <FooterCol title="Browse" links={[
+          { to: "/makers", label: "The Makers" },
+          { to: "/curated", label: "Curated Edits" },
           { to: "/vibes", label: "All Vibes" },
-          { to: "/lookbook", label: "Lookbook" },
+          { to: "/accessories", label: "Accessory Index" },
           { to: "/drawer", label: "My Drawer" },
         ]} />
-        <FooterCol title="Learn" links={[
-          { to: "/accessories", label: "Accessory Index" },
-          { to: "/journal", label: "Journal" },
-          { to: "/about", label: "The Method" },
-        ]} />
-        <div className="space-y-3">
-          <div className="text-[10px] tracking-[0.3em] uppercase text-gold">Newsletter</div>
-          <p className="text-xs text-muted-foreground leading-relaxed">New vibes, drops, and editorial — once a month, never more.</p>
-          <form className="flex border border-border focus-within:border-gold transition" onSubmit={(e) => e.preventDefault()}>
-            <input
-              type="email"
-              required
-              placeholder="you@domain.com"
-              className="flex-1 bg-transparent px-3 py-2.5 text-xs outline-none placeholder:text-muted-foreground/50"
-              aria-label="Email address"
-            />
-            <button className="text-[10px] tracking-[0.3em] uppercase px-3 bg-foreground text-background hover:bg-gold transition">Join</button>
-          </form>
-        </div>
       </div>
       <div className="border-t border-border px-6 md:px-12 py-5 flex flex-wrap items-center justify-between gap-3 text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
         <span>© The Vault · Vol. 01</span>

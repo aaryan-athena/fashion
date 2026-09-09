@@ -148,6 +148,51 @@ export function lookupAccessoryDefinition(label: string): { name: string; defini
 export const vibeSlug = (vibe: string) =>
   vibe.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
+/**
+ * Map a loosely-worded vibe name onto a real catalog vibe, or null.
+ *
+ * Models asked to "pick from this list" reliably return near-misses —
+ * "Minimalist" for Minimal, "Old Money Aesthetic" for Old Money — and dropping
+ * those throws away an otherwise correct answer. This resolves the obvious
+ * cases and refuses the rest, so nothing invented reaches the UI as a link.
+ */
+export function resolveVibeName(input: string): string | null {
+  const raw = input.trim();
+  if (!raw) return null;
+
+  const exact = VIBES.find((v) => v.vibe === raw);
+  if (exact) return exact.vibe;
+
+  const key = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const k = key(raw);
+
+  const ci = VIBES.find((v) => key(v.vibe) === k);
+  if (ci) return ci.vibe;
+
+  // Trailing filler: "Old Money Aesthetic", "Streetwear Style", "Minimal Look".
+  const stripped = key(raw.replace(/\b(aesthetic|vibe|style|look|inspired|core)\b/gi, ""));
+  const trimmed = VIBES.find((v) => key(v.vibe) === stripped);
+  if (trimmed) return trimmed.vibe;
+
+  // Adjectival forms: "Minimalist" → "Minimal". Only accept when the catalog
+  // name is a prefix of what came back, to avoid matching on a shared word.
+  const prefixed = VIBES.filter((v) => k.startsWith(key(v.vibe)) || stripped.startsWith(key(v.vibe)));
+  if (prefixed.length === 1) return prefixed[0].vibe;
+
+  return null;
+}
+
+/** Resolve a model's vibe list to real catalog names, de-duplicated, in order. */
+export function resolveVibeNames(inputs: string[], limit = 3): string[] {
+  const out: string[] = [];
+  for (const input of inputs) {
+    const name = resolveVibeName(input);
+    if (name && !out.includes(name)) out.push(name);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
 // Reverse lookup: canonical accessory name → every vibe that recommends it
 // (as a hero piece, in the main edit, or as an add-on).
 const ACCESSORY_TO_VIBES: Record<string, string[]> = (() => {

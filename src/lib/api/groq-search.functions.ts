@@ -11,11 +11,14 @@ import { VIBES } from "../vault-data";
 
 const GROQ_MODEL_DEFAULT = "llama-3.3-70b-versatile";
 
+// Bounds are deliberately loose. The model treats "1-3 vibes" as guidance, not
+// a contract — a live run returned four — and a strict cap would throw away an
+// otherwise good answer over one extra array entry. Trimming happens below.
 const AiSearchResult = z.object({
-  matchedVibes: z.array(z.string()).max(3),
-  customVibeName: z.string().min(1).max(60),
-  styleNote: z.string().min(1).max(500),
-  suggestedColors: z.array(z.string()).max(5),
+  matchedVibes: z.array(z.string()).max(20),
+  customVibeName: z.string().min(1).max(200),
+  styleNote: z.string().min(1).max(1500),
+  suggestedColors: z.array(z.string()).max(20),
   confidence: z.enum(["high", "medium", "low"]),
 });
 
@@ -104,7 +107,17 @@ export const aiVibeSearch = createServerFn({ method: "POST" })
         return { ok: false, reason: "AI couldn't confidently match a vibe — try rephrasing." };
       }
 
-      return { ok: true, result: { ...parsed.data, matchedVibes } };
+      // Trim on the way out, now that a loose schema lets long replies through.
+      return {
+        ok: true,
+        result: {
+          ...parsed.data,
+          matchedVibes,
+          customVibeName: parsed.data.customVibeName.slice(0, 60),
+          styleNote: parsed.data.styleNote.slice(0, 600),
+          suggestedColors: parsed.data.suggestedColors.slice(0, 5),
+        },
+      };
     } catch (error) {
       console.error("Groq request failed", error);
       return { ok: false, reason: "AI search is temporarily unavailable — try again shortly." };

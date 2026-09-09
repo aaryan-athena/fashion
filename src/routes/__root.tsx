@@ -5,6 +5,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import heroBg from "../assets/hero-jewels.jpg";
 import { reportAppError } from "../lib/error-reporting";
+import { TourOverlay, TourPrompt } from "../components/Tour";
 
 function NotFoundComponent() {
   return (
@@ -148,6 +149,11 @@ function RootComponent() {
       <div className="relative z-10">
         <Outlet />
       </div>
+
+      {/* Mounted at the root so a tour step can point at any element on any
+          route, and so the overlay sits above the sticky header. */}
+      <TourOverlay />
+      <TourPrompt />
     </QueryClientProvider>
   );
 }

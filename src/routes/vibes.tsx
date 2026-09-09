@@ -4,7 +4,7 @@ import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 import { VIBES, colorToHex, lookupAccessoryDefinition, vibeSlug } from "@/lib/vault-data";
 import { vibeImage } from "@/lib/vibe-images";
 import { ACCESSORY_META } from "@/lib/accessory-data";
-import { ProductPicker, ClothingRail } from "@/components/ShopTheLook";
+import { ProductPicker, ClothingRail, MakerLine } from "@/components/ShopTheLook";
 
 
 export const Route = createFileRoute("/vibes")({
@@ -143,9 +143,8 @@ function VibesPage() {
                             </div>
                             <figcaption className="p-3">
                               <div className="text-xs font-medium leading-tight">{p.name}</div>
-                              <div className="text-[10px] tracking-[0.12em] uppercase text-muted-foreground mt-1">
-                                <span className="text-foreground/80">{p.meta!.brand}</span>
-                                <span className="text-muted-foreground/60"> · {p.meta!.model}</span>
+                              <div className="mt-1">
+                                <MakerLine accessory={p.name} />
                               </div>
                               <ProductPicker accessory={p.name} />
                             </figcaption>

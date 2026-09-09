@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 import { ACCESSORY_DEFINITIONS, getVibesForAccessory, vibeSlug } from "@/lib/vault-data";
 import { ACCESSORY_META } from "@/lib/accessory-data";
-import { ProductPicker } from "@/components/ShopTheLook";
+import { ProductPicker, MakerLine } from "@/components/ShopTheLook";
 import { OwnToggle } from "@/components/Drawer";
 import { CATEGORIES, categorize, type Cat } from "@/lib/accessory-category";
 
@@ -85,7 +85,7 @@ function AccessoriesPage() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div data-tour="accessory-grid" className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {items.map((i) => {
             const meta = ACCESSORY_META[i.name];
             return (
@@ -107,11 +107,9 @@ function AccessoriesPage() {
                     <h2 className="font-display text-xl font-light leading-tight">{i.name}</h2>
                     <span className="text-[10px] tracking-[0.25em] uppercase text-gold shrink-0">{i.cat}</span>
                   </div>
-                  {meta && (
-                    <p className="text-[11px] tracking-[0.15em] uppercase text-muted-foreground mb-3">
-                      <span className="text-foreground">{meta.brand}</span> · {meta.model}
-                    </p>
-                  )}
+                  <p className="mb-3">
+                    <MakerLine accessory={i.name} />
+                  </p>
                   <p className="text-sm text-foreground/75 leading-relaxed">{i.def}</p>
                   {i.vibes.length > 0 && (
                     <div className="mt-3 pt-3 border-t border-border/60">
