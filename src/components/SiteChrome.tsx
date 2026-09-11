@@ -36,7 +36,7 @@ const NAV_LINKS: NavLink[] = [
  * and in the footer.
  */
 const PRIMARY_NAV: NavLink[] = NAV_LINKS.filter((l) =>
-  ["/start", "/learn", "/makers", "/curated", "/vibes", "/drawer"].includes(l.to),
+  ["/start", "/learn", "/wishlist", "/makers", "/vibes", "/drawer"].includes(l.to),
 );
 
 export function SiteHeader() {
@@ -134,9 +134,9 @@ export function SiteFooter() {
             <span className="text-sm tracking-[0.3em] uppercase">The Vault</span>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-            A vibe-first accessory guide for men, pointing at independent Indian makers rather than
-            marketplace listings. Every chain, ring, watch, earring and bracelet mapped to the fit
-            it belongs in.
+            A vibe-first accessory guide for men. Every chain, ring, watch, earring and bracelet
+            mapped to the fit it belongs in — led by independent Indian makers, with luxury and
+            marketplace options alongside.
           </p>
         </div>
         <FooterCol title="Start" links={[

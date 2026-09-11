@@ -49,7 +49,7 @@ function DrawerPage() {
   return (
     <main className="min-h-screen text-foreground">
       <SiteHeader />
-      <section className="px-6 md:px-12 py-16 max-w-6xl mx-auto">
+      <section data-tour="drawer-body" className="px-6 md:px-12 py-16 max-w-6xl mx-auto">
         <div className="panel border border-border p-6 md:p-8 mb-10">
           <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">Your collection</p>
           <h1 className="text-5xl md:text-6xl font-light mb-4">My Drawer.</h1>

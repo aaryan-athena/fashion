@@ -12,7 +12,7 @@ export const Route = createFileRoute("/makers")({
       {
         name: "description",
         content:
-          "The independent Indian jewellery labels behind the Vault — who they are, where they work, and what they make. Small studios, not marketplace listings.",
+          "The independent Indian jewellery labels behind the Vault — who they are, where they work, and what they make. Small studios, named ahead of the luxury houses.",
       },
       { property: "og:title", content: "The Makers — The Vault" },
       {
@@ -46,14 +46,13 @@ function MakersPage() {
         <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">The Roster</p>
         <h1 className="text-5xl md:text-6xl font-light mb-5">
           {MAKERS.length} homegrown labels,
-          <span className="italic text-muted-foreground"> not one marketplace listing.</span>
+          <span className="italic text-muted-foreground"> named before anyone else.</span>
         </h1>
         <p className="text-muted-foreground max-w-2xl leading-relaxed mb-4">
           Indian men's jewellery has a talent problem in reverse: the makers are here, working out
           of studios in Jaipur, Mumbai and Bengaluru, and almost none of them can outspend a
-          marketplace for your attention. So this is the whole catalog now — every piece the
-          Vault recommends points at one of these labels' own stores, where the maker keeps the
-          margin.
+          marketplace for your attention. So they lead every recommendation on the site — the
+          luxury houses and the marketplace search sit underneath them, never above.
         </p>
         <p className="text-muted-foreground max-w-2xl leading-relaxed text-sm">
           Prices are bands, not promises. The live number is always on the maker's own site.

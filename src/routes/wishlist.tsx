@@ -174,13 +174,38 @@ function WishlistPage() {
           <span className="italic text-muted-foreground"> knows your taste.</span>
         </h1>
         <p className="text-muted-foreground max-w-2xl leading-relaxed">
-          Screenshot your Amazon or Flipkart wishlist and drop it here. We'll read what you're
-          already saving up for, work out how you actually dress, and point at accessories that sit
-          with it — from independent Indian makers, not marketplace filler.
+          Screenshot a shopping list of clothes you like and drop it here. We read the product names,
+          work out how you actually dress, and answer with <strong className="text-foreground/90">accessories</strong> that
+          sit with those clothes — homegrown Indian makers first, with luxury and marketplace options
+          alongside.
         </p>
+
+        {/* Being specific about the input is the difference between this
+            working first try and reading as broken. */}
+        <div className="mt-6 grid sm:grid-cols-2 gap-3 max-w-2xl">
+          <div className="border border-border/70 bg-card/30 p-4">
+            <div className="text-[10px] tracking-[0.25em] uppercase text-gold mb-2">Works</div>
+            <ul className="text-xs text-muted-foreground leading-relaxed space-y-1">
+              <li>· A wishlist, cart or order history — Amazon, Flipkart, Myntra, any store</li>
+              <li>· Clothing and footwear, where the product names are readable</li>
+              <li>· A screenshot straight off your phone</li>
+            </ul>
+          </div>
+          <div className="border border-border/70 bg-card/30 p-4">
+            <div className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-2">
+              Won't work
+            </div>
+            <ul className="text-xs text-muted-foreground leading-relaxed space-y-1">
+              <li>· Photos of clothes with no text to read</li>
+              <li>· A zoomed-out page where the titles are illegible</li>
+              <li>· A list of jewellery — this reads clothes and suggests accessories, not the reverse</li>
+            </ul>
+          </div>
+        </div>
 
         {/* Upload */}
         <div
+          data-tour="wishlist-upload"
           onDragOver={(e) => {
             e.preventDefault();
             setDragging(true);

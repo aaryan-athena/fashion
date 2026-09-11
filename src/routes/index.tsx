@@ -866,7 +866,7 @@ function Index() {
             {
               n: "03",
               t: "Homegrown only",
-              d: "Every piece points at an independent Indian maker's own store — not a marketplace listing, and not a brand you've already heard of.",
+              d: "Every piece leads with an independent Indian maker's own store, then shows the luxury reference and a plain marketplace search — so the small label gets seen first, not instead.",
             },
           ].map((b) => (
             <div key={b.n} className="space-y-3">

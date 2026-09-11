@@ -46,7 +46,7 @@ function CuratedPage() {
         </p>
       </section>
 
-      <section className="px-6 md:px-12 pb-16 max-w-5xl mx-auto space-y-6">
+      <section data-tour="curated-edits" className="px-6 md:px-12 pb-16 max-w-5xl mx-auto space-y-6">
         {CURATED_EDITS.map((edit) => (
           <EditCard key={edit.id} edit={edit} />
         ))}

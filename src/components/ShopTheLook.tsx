@@ -3,6 +3,8 @@ import { Link } from "@tanstack/react-router";
 import { amazonUrl, myntraUrl, makerUrl, makerLinkIsSearch } from "@/lib/shop-links";
 import { getMakerPicks, hasHomegrownCoverage } from "@/lib/maker-picks";
 import { PRICE_BAND_LABEL } from "@/lib/makers-data";
+import { getLuxuryFor, LUXURY_TIER_LABEL } from "@/lib/luxury-data";
+import { categorize } from "@/lib/accessory-category";
 import { getVibeClothing, type ClothingItem } from "@/lib/clothing-data";
 
 /** Amazon + Myntra deep-link buttons for a search query. */
@@ -60,31 +62,23 @@ export function MakerLine({ accessory }: { accessory: string }) {
 }
 
 /**
- * Where to actually buy a piece — homegrown Indian makers first.
+ * Where to actually buy a piece, in three tiers.
  *
- * Named ProductPicker still because four routes call it that; what it lists
- * changed from invented SKUs to real labels. Prices are bands, not per-product
- * claims: the maker's own store is the only place a price is truthful.
+ * Order is the product position, not an implementation detail: homegrown
+ * makers first and open by default, then the luxury reference points, then a
+ * plain marketplace search. Shoppers arrive with all three intents — "support
+ * someone small", "something like a Cartier", "just show me Amazon" — and
+ * answering only the first was sending the other two away.
+ *
+ * Prices everywhere are bands, never per-product claims. The seller's own page
+ * is the only place a price is true.
  */
 export function ProductPicker({ accessory, defaultOpen = false }: { accessory: string; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   const picks = getMakerPicks(accessory);
-
-  // Categories no independent Indian jeweller makes (a fitness tracker, say).
-  // Say so plainly and hand off, rather than faking a homegrown option.
-  if (picks.length === 0) {
-    if (hasHomegrownCoverage(accessory)) return null;
-    return (
-      <div className="mt-2">
-        <p className="text-[10px] leading-relaxed text-muted-foreground">
-          No homegrown maker builds this one — it's a marketplace piece.
-        </p>
-        <div className="mt-1.5">
-          <ShopButtons query={accessory.toLowerCase() + " men"} size="xs" />
-        </div>
-      </div>
-    );
-  }
+  const luxury = getLuxuryFor(categorize(accessory));
+  const marketQuery = `${accessory.toLowerCase()} men`;
+  const homegrown = hasHomegrownCoverage(accessory);
 
   return (
     <div className="mt-2">
@@ -95,46 +89,128 @@ export function ProductPicker({ accessory, defaultOpen = false }: { accessory: s
         }}
         className="text-[10px] tracking-[0.25em] uppercase text-gold hover:underline"
       >
-        {open ? "Hide makers −" : `${picks.length} homegrown ${picks.length === 1 ? "maker" : "makers"} +`}
+        {open
+          ? "Hide options −"
+          : picks.length > 0
+            ? `Where to buy · ${picks.length} homegrown +`
+            : "Where to buy +"}
       </button>
+
       {open && (
-        <ul className="mt-2 divide-y divide-border/60 border border-border/60">
-          {picks.map(({ maker, reason, query }) => (
-            <li key={maker.id} className="p-2.5">
-              <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                <span className="text-xs font-medium text-foreground/90">{maker.name}</span>
-                <span className="text-[10px] text-muted-foreground tabular-nums">
-                  {PRICE_BAND_LABEL[maker.priceBand]}
-                </span>
-              </div>
-              {maker.city && (
-                <div className="text-[9px] tracking-[0.2em] uppercase text-gold mt-0.5">{maker.city}</div>
-              )}
-              {reason && (
-                <p className="text-[11px] text-muted-foreground leading-snug mt-1">{reason}</p>
-              )}
-              <div className="mt-1.5 flex items-center gap-2 flex-wrap">
-                <a
-                  href={makerUrl(maker, query)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="px-2 py-1 text-[9px] tracking-[0.15em] uppercase border border-border text-muted-foreground hover:border-gold hover:text-gold transition"
-                >
-                  {makerLinkIsSearch(maker) ? "Shop their range ↗" : "Visit the label ↗"}
-                </a>
-                <Link
-                  to="/makers"
-                  hash={`maker-${maker.id}`}
-                  onClick={(e) => e.stopPropagation()}
-                  className="text-[9px] tracking-[0.15em] uppercase text-muted-foreground hover:text-gold transition"
-                >
-                  Their story
-                </Link>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-2 border border-border/60 divide-y divide-border/60">
+          {/* Tier 1 — homegrown. The point of the platform, so it leads. */}
+          {picks.length > 0 ? (
+            <section>
+              <header className="px-2.5 pt-2.5 text-[9px] tracking-[0.25em] uppercase text-gold">
+                Homegrown
+              </header>
+              <ul className="divide-y divide-border/40">
+                {picks.map(({ maker, reason, query }) => (
+                  <li key={maker.id} className="p-2.5">
+                    <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                      <span className="text-xs font-medium text-foreground/90">{maker.name}</span>
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
+                        {PRICE_BAND_LABEL[maker.priceBand]}
+                      </span>
+                    </div>
+                    {maker.city && (
+                      <div className="text-[9px] tracking-[0.2em] uppercase text-gold mt-0.5">{maker.city}</div>
+                    )}
+                    {reason && (
+                      <p className="text-[11px] text-muted-foreground leading-snug mt-1">{reason}</p>
+                    )}
+                    <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                      <a
+                        href={makerUrl(maker, query)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-2 py-1 text-[9px] tracking-[0.15em] uppercase border border-border text-muted-foreground hover:border-gold hover:text-gold transition"
+                      >
+                        {makerLinkIsSearch(maker) ? "Shop their range ↗" : "Visit the label ↗"}
+                      </a>
+                      <Link
+                        to="/makers"
+                        hash={`maker-${maker.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-[9px] tracking-[0.15em] uppercase text-muted-foreground hover:text-gold transition"
+                      >
+                        Their story
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : (
+            !homegrown && (
+              <p className="p-2.5 text-[11px] leading-relaxed text-muted-foreground">
+                No independent Indian maker builds this one — the options below are the honest ones.
+              </p>
+            )
+          )}
+
+          {/* Tier 2 — luxury reference points. Homepages only: these houses
+              block automated checks, so a guessed deep link can't be verified. */}
+          {luxury.length > 0 && (
+            <section>
+              <header className="px-2.5 pt-2.5 text-[9px] tracking-[0.25em] uppercase text-muted-foreground">
+                Luxury
+              </header>
+              <ul className="divide-y divide-border/40">
+                {luxury.map((b) => (
+                  <li key={b.id} className="p-2.5">
+                    <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                      <span className="text-xs font-medium text-foreground/90">
+                        {b.name}
+                        {b.origin === "india" && (
+                          <span className="text-[9px] tracking-[0.15em] uppercase text-gold ml-1.5">Indian</span>
+                        )}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
+                        {LUXURY_TIER_LABEL[b.tier]}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-snug mt-1">{b.blurb}</p>
+                    <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                      <a
+                        href={b.site}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-2 py-1 text-[9px] tracking-[0.15em] uppercase border border-border text-muted-foreground hover:border-gold hover:text-gold transition"
+                      >
+                        Official site ↗
+                      </a>
+                      {b.onMarketplace && (
+                        <a
+                          href={amazonUrl(`${b.name} ${marketQuery}`)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="px-2 py-1 text-[9px] tracking-[0.15em] uppercase border border-border text-muted-foreground hover:border-gold hover:text-gold transition"
+                        >
+                          On Amazon ↗
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Tier 3 — the marketplace search people would have run anyway. */}
+          <section className="p-2.5">
+            <header className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground mb-1.5">
+              Marketplace
+            </header>
+            <p className="text-[11px] text-muted-foreground leading-snug mb-2">
+              A plain search for “{accessory.toLowerCase()}”, if you'd rather buy where you already have an account.
+            </p>
+            <ShopButtons query={marketQuery} size="xs" />
+          </section>
+        </div>
       )}
     </div>
   );
