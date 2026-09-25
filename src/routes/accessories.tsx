@@ -113,7 +113,6 @@ function AccessoriesPage() {
                   <p className="text-sm text-foreground/75 leading-relaxed">{i.def}</p>
                   {i.vibes.length > 0 && (
                     <div className="mt-3 pt-3 border-t border-border/60">
-                      <div className="text-[9px] tracking-[0.25em] uppercase text-gold mb-2">Shows up in</div>
                       <div className="flex flex-wrap gap-1.5">
                         {i.vibes.map((vibe) => (
                           <Link

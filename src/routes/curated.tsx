@@ -9,8 +9,6 @@ import {
   type CuratedEdit,
 } from "@/lib/creator-data";
 import { getAccessoryMeta } from "@/lib/accessory-data";
-import { lookupAccessoryDefinition } from "@/lib/vault-data";
-import { getTraits, FORMALITY_LABEL } from "@/lib/accessory-traits";
 
 export const Route = createFileRoute("/curated")({
   head: () => ({
@@ -34,7 +32,6 @@ function CuratedPage() {
       <SiteHeader />
 
       <section className="px-6 md:px-12 pt-16 pb-10 max-w-5xl mx-auto">
-        <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">Curated Edits</p>
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-light leading-[1.05] mb-5">
           Sets chosen together,
           <span className="italic text-muted-foreground"> not filtered by category.</span>
@@ -55,7 +52,6 @@ function CuratedPage() {
       {/* The collab programme — stated as an open invitation rather than faked */}
       <section className="border-t border-border bg-card/30 px-6 md:px-12 py-16">
         <div className="max-w-5xl mx-auto">
-          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">Collaborations</p>
           <h2 className="text-3xl md:text-4xl font-light leading-tight mb-4">
             Two of these slots are open.
           </h2>
@@ -135,10 +131,7 @@ function EditCard({ edit }: { edit: CuratedEdit }) {
           )}
         </div>
         {edit.budget && (
-          <div className="text-right shrink-0">
-            <div className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground">All in</div>
-            <div className="text-sm tabular-nums text-foreground/90">{edit.budget}</div>
-          </div>
+          <div className="text-sm tabular-nums text-muted-foreground shrink-0">{edit.budget}</div>
         )}
       </div>
 
@@ -153,7 +146,6 @@ function EditCard({ edit }: { edit: CuratedEdit }) {
       <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
         {pieces.map((p) => {
           const meta = getAccessoryMeta(p);
-          const traits = getTraits(p);
           return (
             <div key={p} className="border border-border bg-background/50 flex flex-col overflow-hidden">
               {meta?.image && (
@@ -166,16 +158,12 @@ function EditCard({ edit }: { edit: CuratedEdit }) {
                   className="w-full aspect-square object-cover"
                 />
               )}
+              {/* Name and where to buy. The formality label and the full
+                  definition under every thumbnail turned a four-piece set into
+                  a wall of text; the styling note below already explains the
+                  set, which is the thing this page is for. */}
               <div className="p-3 flex-1 flex flex-col">
                 <div className="font-display text-base leading-snug">{p}</div>
-                {traits && (
-                  <div className="text-[9px] tracking-[0.15em] uppercase text-muted-foreground mt-1">
-                    {FORMALITY_LABEL[traits.formality]}
-                  </div>
-                )}
-                <p className="text-[11px] text-muted-foreground leading-snug mt-1.5 flex-1">
-                  {lookupAccessoryDefinition(p).definition}
-                </p>
                 <ProductPicker accessory={p} />
               </div>
             </div>

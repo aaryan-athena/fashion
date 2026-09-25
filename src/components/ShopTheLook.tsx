@@ -89,11 +89,10 @@ export function ProductPicker({ accessory, defaultOpen = false }: { accessory: s
         }}
         className="text-[10px] tracking-[0.25em] uppercase text-gold hover:underline"
       >
-        {open
-          ? "Hide options −"
-          : picks.length > 0
-            ? `Where to buy · ${picks.length} homegrown +`
-            : "Where to buy +"}
+        {/* Short enough to stay on one line. The maker count used to be in
+            here, which wrapped this to two lines of gold caps under every
+            single card — the count is visible the moment the panel opens. */}
+        {open ? "Hide −" : "Where to buy +"}
       </button>
 
       {open && (

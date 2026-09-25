@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
-import { MAKERS, PRICE_BAND_LABEL, PRICE_BAND_NOTE, type PriceBand } from "@/lib/makers-data";
+import { MAKERS, PRICE_BAND_LABEL, type PriceBand } from "@/lib/makers-data";
 import { makerUrl, makerLinkIsSearch } from "@/lib/shop-links";
 import { CATEGORIES, type Cat } from "@/lib/accessory-category";
 
@@ -43,19 +43,14 @@ function MakersPage() {
       <SiteHeader />
 
       <section className="px-6 md:px-12 py-16 max-w-6xl mx-auto">
-        <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">The Roster</p>
         <h1 className="text-5xl md:text-6xl font-light mb-5">
           {MAKERS.length} homegrown labels,
           <span className="italic text-muted-foreground"> named before anyone else.</span>
         </h1>
-        <p className="text-muted-foreground max-w-2xl leading-relaxed mb-4">
-          Indian men's jewellery has a talent problem in reverse: the makers are here, working out
-          of studios in Jaipur, Mumbai and Bengaluru, and almost none of them can outspend a
-          marketplace for your attention. So they lead every recommendation on the site — the
-          luxury houses and the marketplace search sit underneath them, never above.
-        </p>
-        <p className="text-muted-foreground max-w-2xl leading-relaxed text-sm">
-          Prices are bands, not promises. The live number is always on the maker's own site.
+        <p className="text-muted-foreground max-w-2xl leading-relaxed">
+          Studios in Jaipur, Mumbai and Bengaluru that can't outspend a marketplace for your
+          attention — so they lead every recommendation here. Prices are bands; the live number is
+          on the maker's own site.
         </p>
 
         {/* Filters */}
@@ -109,53 +104,42 @@ function MakersPage() {
                     {[m.city, m.founder].filter(Boolean).join(" · ") || "Independent label"}
                   </div>
                 </div>
-                <div className="text-right shrink-0">
-                  <div className="text-xs tabular-nums text-foreground/90">{PRICE_BAND_LABEL[m.priceBand]}</div>
-                  <div className="text-[10px] text-muted-foreground mt-0.5">{PRICE_BAND_NOTE[m.priceBand]}</div>
+                <div className="text-xs tabular-nums text-muted-foreground shrink-0">
+                  {PRICE_BAND_LABEL[m.priceBand]}
                 </div>
               </div>
 
               <p className="text-sm text-muted-foreground leading-relaxed mt-4">{m.blurb}</p>
 
-              <div className="mt-4 pt-4 border-t border-border/60">
-                <div className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground mb-2">Makes</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {m.makes.map((c) => (
-                    <span key={c} className="text-[10px] tracking-[0.12em] uppercase border border-border px-2 py-0.5 text-foreground/80">
-                      {c}
-                    </span>
-                  ))}
-                </div>
+              {/* Categories and vibes, unlabelled. Two "Makes" / "Sits in"
+                  headings above two rows of chips said less than the chips do. */}
+              <div className="mt-4 pt-4 border-t border-border/60 flex flex-wrap gap-1.5">
+                {m.makes.map((c) => (
+                  <span key={c} className="text-[10px] tracking-[0.12em] uppercase border border-border px-2 py-0.5 text-foreground/80">
+                    {c}
+                  </span>
+                ))}
+                {m.vibes.map((v) => (
+                  <Link
+                    key={v}
+                    to="/vibes"
+                    hash={`vibe-${v.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                    className="text-[10px] tracking-[0.12em] uppercase border border-border/60 px-2 py-0.5 text-muted-foreground hover:border-gold hover:text-gold transition"
+                  >
+                    {v}
+                  </Link>
+                ))}
               </div>
 
-              <div className="mt-4">
-                <div className="text-[9px] tracking-[0.25em] uppercase text-muted-foreground mb-2">Sits in</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {m.vibes.map((v) => (
-                    <Link
-                      key={v}
-                      to="/vibes"
-                      hash={`vibe-${v.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                      className="text-[10px] tracking-[0.12em] uppercase border border-border px-2 py-0.5 text-muted-foreground hover:border-gold hover:text-gold transition"
-                    >
-                      {v}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-5 pt-4 border-t border-border/60 flex items-center gap-3 flex-wrap mt-auto">
+              <div className="mt-5 pt-4 border-t border-border/60 mt-auto">
                 <a
                   href={makerUrl(m)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] tracking-[0.25em] uppercase border border-gold px-4 py-2.5 text-gold hover:bg-gold hover:text-background transition"
+                  className="text-[10px] tracking-[0.25em] uppercase border border-gold px-4 py-2.5 text-gold hover:bg-gold hover:text-background transition inline-block"
                 >
                   {makerLinkIsSearch(m) ? "Their store ↗" : "Their site ↗"}
                 </a>
-                <span className="text-[10px] text-muted-foreground">
-                  Buying direct — no marketplace cut
-                </span>
               </div>
             </article>
           ))}

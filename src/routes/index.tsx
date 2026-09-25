@@ -111,11 +111,14 @@ function SectionNav() {
             className="group flex items-center gap-3"
             aria-current={isActive ? "true" : undefined}
           >
+            {/* Plain text rather than a bordered chip. Six boxed pills stacked
+                down the right edge read as a second UI competing with the page,
+                and they overlapped the content column at common widths. */}
             <span
-              className={`text-[10px] tracking-[0.2em] uppercase whitespace-nowrap bg-background/90 backdrop-blur px-2 py-1 border transition ${
+              className={`text-[10px] tracking-[0.2em] uppercase whitespace-nowrap transition ${
                 isActive
-                  ? "text-gold border-gold-soft opacity-100"
-                  : "text-foreground/70 border-border opacity-60 group-hover:opacity-100 group-hover:text-foreground"
+                  ? "text-gold opacity-100"
+                  : "text-muted-foreground opacity-45 group-hover:opacity-100 group-hover:text-foreground"
               }`}
             >
               {item.label}
@@ -206,17 +209,14 @@ function Index() {
       {/* Hero — sits over the global fixed background image */}
       <section id="hero-top" className="relative min-h-[80vh] flex items-center justify-center px-5 sm:px-6 md:px-10 py-16 sm:py-20">
         <div className="relative z-10 max-w-4xl mx-auto w-full text-center space-y-6">
-          <div className="inline-flex items-center gap-3 border border-gold bg-background/70 backdrop-blur px-3.5 sm:px-4 py-2 mx-auto rounded-sm shadow-sm max-w-[90vw]">
-            <span className="h-1.5 w-1.5 rounded-full bg-gold shrink-0" />
-            <p className="text-[9.5px] sm:text-xs tracking-[0.14em] sm:tracking-[0.32em] uppercase text-gold font-semibold leading-snug">Men's Accessories · Chains · Rings · Watches · Earrings</p>
-          </div>
+          {/* The badge above this listed the categories the headline already
+              implies, in the same gold, directly above it. Two labels, one job. */}
           <h1 className="on-image text-4xl sm:text-6xl lg:text-7xl leading-[1.05] sm:leading-[0.95] font-medium text-foreground">
             Men's accessories,
             <span className="italic text-gold"> matched to your vibe.</span>
           </h1>
-          <p className="on-image text-lg text-foreground/90 leading-relaxed max-w-2xl mx-auto">
-            Streetwear. Old money. Techwear. Tell us the energy — we hand you the chains, rings, watches, earrings and
-            bracelets that finish the fit, from independent Indian makers.
+          <p className="on-image text-lg text-foreground/90 leading-relaxed max-w-xl mx-auto">
+            Tell us the energy — we hand you the pieces that finish the fit, from independent Indian makers.
           </p>
 
           {/*
@@ -434,12 +434,11 @@ function Index() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
             <div>
-              <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">Your edit</p>
               <h2 className="text-4xl md:text-5xl font-light">
                 <span className="italic">{selected.vibe}</span>
                 <span className="text-muted-foreground"> — {selected.outfitType.toLowerCase()}</span>
               </h2>
-              <p className="text-muted-foreground mt-4 max-w-2xl leading-relaxed">{selected.definition}</p>
+              <p className="text-muted-foreground mt-3 max-w-2xl leading-relaxed">{selected.definition}</p>
             </div>
             <div className="flex items-center gap-3">
               {selected.colors.map((c) => (
@@ -452,42 +451,18 @@ function Index() {
           </div>
 
           <div key={selected.vibe} className="grid xl:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.65fr)] gap-4 mb-6 items-start animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <div className="grid sm:grid-cols-[0.9fr_1.1fr] xl:grid-cols-1 gap-4">
-              <div className="relative border border-gold-soft overflow-hidden">
-                <img
-                  src={vibeImage(selected.vibe)}
-                  alt={`${selected.vibe} accessories flat lay`}
-                  width={768}
-                  height={768}
-                  loading="lazy"
-                  className="w-full aspect-[4/3] xl:aspect-square object-cover"
-                />
-                <div className="absolute bottom-3 left-3 bg-background/80 backdrop-blur border border-gold-soft px-3 py-1.5">
-                  <div className="text-[10px] tracking-[0.3em] uppercase text-gold">{selected.outfitType}</div>
-                  <div className="font-display text-base leading-tight">{selected.vibe}</div>
-                </div>
-              </div>
-              <div className="border border-border bg-background/50 p-5 space-y-4">
-                <div>
-                  <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-2">The brief</div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{selected.definition}</p>
-                </div>
-                <div className="pt-3 border-t border-border/60">
-                  <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-2">Palette</div>
-                  <div className="flex flex-wrap gap-2">
-                    {selected.colors.map((c) => (
-                      <div key={c} className="flex items-center gap-1.5 border border-border px-2 py-1">
-                        <span className="h-3 w-3" style={{ backgroundColor: colorToHex(c) }} />
-                        <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">{c}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="pt-3 border-t border-border/60">
-                  <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-2">Outfit type</div>
-                  <div className="font-display text-lg">{selected.outfitType}</div>
-                </div>
-              </div>
+            {/* Just the image. The brief, palette and outfit type used to be
+                repeated in a panel beside it — all three were already stated in
+                the heading above, so the panel was pure duplication. */}
+            <div className="border border-gold-soft overflow-hidden">
+              <img
+                src={vibeImage(selected.vibe)}
+                alt={`${selected.vibe} accessories`}
+                width={768}
+                height={768}
+                loading="lazy"
+                className="w-full aspect-[4/3] xl:aspect-square object-cover"
+              />
             </div>
             <article className="grid md:grid-cols-3 gap-3 items-stretch">
               {(() => {
@@ -504,9 +479,9 @@ function Index() {
                 const add = dedupe(selected.addOns);
                 return (
                   <>
-                    <Block label="Most valuable" subtitle="The hero pieces" items={mv} accent />
-                    <Block label="Recommended" subtitle="The full edit" items={rec} />
-                    <Block label="Add-ons" subtitle="Layer them in" items={add} />
+                    <Block label="Most valuable" items={mv} accent />
+                    <Block label="Recommended" items={rec} />
+                    <Block label="Add-ons" items={add} />
                   </>
                 );
               })()}
@@ -523,13 +498,14 @@ function Index() {
       {/* Occasions — the same drawer, judged against a real dress code */}
       <section id="occasion" className="panel border-t border-border px-6 md:px-12 py-24 md:py-28">
         <div className="max-w-6xl mx-auto">
-          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-4 font-semibold">Where are you going?</p>
-          <h2 className="text-5xl sm:text-6xl md:text-7xl leading-[0.98] font-medium mb-5">
-            Occasion <span className="italic text-gold">intelligence</span>
+          {/* One heading and one line. This was an eyebrow, a 7xl headline and
+              a three-line paragraph — three stacked statements of the same
+              idea before the reader reached a single control. */}
+          <h2 className="text-3xl md:text-4xl font-light mb-3">
+            Where are you <span className="italic text-gold">going?</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mb-8 leading-relaxed text-lg">
-            Most men don't lack accessories — they lack the read on when formality actually matters. Pick
-            where you're going and the same catalog answers differently.
+          <p className="text-muted-foreground max-w-xl mb-8 leading-relaxed">
+            The same catalog, filtered to what the occasion actually allows.
           </p>
 
           <div className="flex flex-wrap gap-2 mb-8">
@@ -691,13 +667,11 @@ function Index() {
       {/* Mix & Match — build a custom vibe from 2–3 existing ones */}
       <section id="mix" className="panel px-6 md:px-12 py-24 md:py-28 border-t border-border">
         <div className="max-w-6xl mx-auto">
-          <p className="text-xs tracking-[0.3em] uppercase text-gold mb-4 font-semibold">Build your own</p>
-          <h2 className="text-6xl sm:text-7xl md:text-8xl leading-[0.95] font-medium mb-5">
+          <h2 className="text-3xl md:text-4xl font-light mb-3">
             Mix <span className="italic text-gold">&</span> Match
           </h2>
-          <p className="text-muted-foreground max-w-2xl mb-8 leading-relaxed text-lg">
-            Not one vibe, but two or three? Pick {MIN_MIX}–{MAX_MIX} and we'll blend the colors, hero pieces, and clothing
-            into an edit that's entirely yours.
+          <p className="text-muted-foreground max-w-xl mb-8 leading-relaxed">
+            Pick {MIN_MIX}–{MAX_MIX} vibes and we'll blend them into one edit.
           </p>
 
           <div className="flex flex-wrap gap-2 mb-4">
@@ -769,9 +743,9 @@ function Index() {
               </div>
 
               <div className="grid md:grid-cols-3 gap-3 items-stretch">
-                <Block label="Most valuable" subtitle="One hero per vibe" items={blended.mostValuable} accent />
-                <Block label="Recommended" subtitle="The blended edit" items={blended.recommended} />
-                <Block label="Add-ons" subtitle="Layer them in" items={blended.addOns} />
+                <Block label="Most valuable" items={blended.mostValuable} accent />
+                <Block label="Recommended" items={blended.recommended} />
+                <Block label="Add-ons" items={blended.addOns} />
               </div>
 
               {/* Blending two aesthetics is exactly where metals and weights start
@@ -796,8 +770,7 @@ function Index() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
             <div>
-              <p className="text-xs tracking-[0.3em] uppercase text-gold mb-3">All 22 vibes</p>
-              <h2 className="text-3xl md:text-4xl font-light">Browse the Vault</h2>
+              <h2 className="text-3xl md:text-4xl font-light">All 22 vibes</h2>
             </div>
             <div className="flex border border-border">
               {(["All", "Casual", "Formal"] as const).map((f) => (
@@ -843,12 +816,16 @@ function Index() {
                       ))}
                     </div>
                   </div>
-                  <div className="p-4 space-y-3">
+                  {/* A browse tile is a choice, not a spec sheet. It used to
+                      list all three tiers — nine-odd piece names per card,
+                      across 22 cards — which is what made this grid unreadable.
+                      The hero piece alone is enough to pick with. */}
+                  <div className="p-4">
                     <div className="font-display text-xl leading-tight">{v.vibe}</div>
                     <div className="text-[10px] tracking-[0.25em] uppercase text-gold mt-1">{v.outfitType}</div>
-                    <TierLine label="Most valuable" items={v.mostValuable} />
-                    <TierLine label="Recommended" items={v.recommended} />
-                    <TierLine label="Add-ons" items={v.addOns} />
+                    <div className="text-xs text-muted-foreground mt-2 line-clamp-1">
+                      {v.mostValuable.join(" · ")}
+                    </div>
                   </div>
                 </button>
               );
@@ -861,17 +838,12 @@ function Index() {
       <section id="atelier" className="panel border-t border-border px-6 md:px-12 py-20">
         <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-12">
           {[
-            { n: "01", t: "Vibe-mapped", d: "Every accessory is mapped to a vibe — no guessing what works with what." },
-            { n: "02", t: "Hero + Layer", d: "We name the hero piece first, then what to layer in. Build, don't pile." },
-            {
-              n: "03",
-              t: "Homegrown only",
-              d: "Every piece leads with an independent Indian maker's own store, then shows the luxury reference and a plain marketplace search — so the small label gets seen first, not instead.",
-            },
+            { t: "Vibe-mapped", d: "Every piece mapped to a vibe. No guessing what goes with what." },
+            { t: "Hero, then layer", d: "The hero piece first, then what agrees with it. Build, don't pile." },
+            { t: "Homegrown first", d: "Small Indian makers lead. Luxury and marketplace sit underneath." },
           ].map((b) => (
-            <div key={b.n} className="space-y-3">
-              <div className="text-gold text-xs tracking-[0.3em]">{b.n}</div>
-              <h4 className="text-2xl font-light">{b.t}</h4>
+            <div key={b.t} className="space-y-2">
+              <h4 className="text-xl font-light">{b.t}</h4>
               <p className="text-sm text-muted-foreground leading-relaxed">{b.d}</p>
             </div>
           ))}
@@ -882,9 +854,6 @@ function Index() {
           </Link>
           <Link to="/curated" className="text-xs tracking-[0.3em] uppercase border border-border px-5 py-3 hover:border-gold transition">
             Curated edits
-          </Link>
-          <Link to="/about" className="text-xs tracking-[0.3em] uppercase border border-border px-5 py-3 hover:border-gold transition">
-            The full method
           </Link>
           <Link to="/accessories" className="text-xs tracking-[0.3em] uppercase border border-border px-5 py-3 hover:border-gold transition">
             Accessory glossary
@@ -897,29 +866,27 @@ function Index() {
   );
 }
 
-function TierLine({ label, items }: { label: string; items: string[] }) {
-  return (
-    <div className="border-t border-border/60 pt-2">
-      <div className="text-[9px] tracking-[0.22em] uppercase text-gold">{label}</div>
-      <div className="text-xs text-muted-foreground mt-1 line-clamp-2">{items.join(" · ")}</div>
-    </div>
-  );
-}
-
-function Block({ label, subtitle, items, accent = false }: { label: string; subtitle: string; items: string[]; accent?: boolean }) {
+/**
+ * A tier of the edit.
+ *
+ * Each item is image, name, maker, buy — and nothing else. It used to also
+ * carry a subtitle restating the label and a full definition per piece, which
+ * put four lines of prose under every thumbnail. The definitions still exist,
+ * on the glossary page where looking them up is the point.
+ */
+function Block({ label, items, accent = false }: { label: string; items: string[]; accent?: boolean }) {
   return (
     <div className={`h-full p-4 border ${accent ? "border-gold bg-background" : "border-border bg-background/50"}`}>
-      <div className="mb-4 pb-3 border-b border-border/60">
-        <div className="text-[10px] tracking-[0.3em] uppercase text-gold">{label}</div>
-        <div className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground mt-1.5">{subtitle}</div>
+      <div className="text-[10px] tracking-[0.3em] uppercase text-gold mb-4 pb-3 border-b border-border/60">
+        {label}
       </div>
       <ul className="space-y-4">
         {items.map((p, i) => {
-          const { name, definition } = lookupAccessoryDefinition(p);
+          const { name } = lookupAccessoryDefinition(p);
           const meta = getAccessoryMeta(name);
           return (
             <li key={i} className="space-y-2">
-              {meta ? (
+              {meta && (
                 <img
                   src={meta.image}
                   alt={name}
@@ -928,17 +895,12 @@ function Block({ label, subtitle, items, accent = false }: { label: string; subt
                   loading="lazy"
                   className="w-full aspect-[5/4] object-cover border border-border"
                 />
-              ) : (
-                <div className="text-[10px] text-gold tracking-[0.2em]">{String(i + 1).padStart(2, "0")}</div>
               )}
               <div>
                 <div className="font-display text-base leading-snug">{name}</div>
                 <div className="mt-1 break-words">
                   <MakerLine accessory={name} />
                 </div>
-                {definition && (
-                  <p className="text-xs text-muted-foreground leading-relaxed mt-1.5">{definition}</p>
-                )}
                 <ProductPicker accessory={name} />
               </div>
             </li>
