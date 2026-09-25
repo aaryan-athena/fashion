@@ -65,8 +65,30 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+// Microsoft Clarity — session recording + heatmaps.
+//
+// Public by nature (the project id ends up in a script tag the browser
+// fetches anyway), so it's a VITE_ var rather than a server secret: readable
+// at build time on both server and client, per the convention documented in
+// lib/config.server.ts. Left unset in .env, the script is never emitted —
+// local dev doesn't get recorded unless someone opts in on purpose.
+const CLARITY_PROJECT_ID = import.meta.env.VITE_CLARITY_PROJECT_ID as string | undefined;
+
+const clarityScripts = CLARITY_PROJECT_ID
+  ? [
+      {
+        children: `(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", ${JSON.stringify(CLARITY_PROJECT_ID)});`,
+      },
+    ]
+  : [];
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
+    scripts: clarityScripts,
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },

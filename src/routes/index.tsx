@@ -440,12 +440,17 @@ function Index() {
               </h2>
               <p className="text-muted-foreground mt-3 max-w-2xl leading-relaxed">{selected.definition}</p>
             </div>
-            <div className="flex items-center gap-3">
+            {/* Swatches only — the color name in caps beside every chip
+                (GOLD, ROSE GOLD…) was redundant with the swatch itself, and
+                it's still reachable via the title tooltip on hover. */}
+            <div className="flex items-center gap-2">
               {selected.colors.map((c) => (
-                <div key={c} className="flex items-center gap-2">
-                  <span className="h-6 w-6 border border-border" style={{ backgroundColor: colorToHex(c) }} />
-                  <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{c}</span>
-                </div>
+                <span
+                  key={c}
+                  title={c}
+                  className="h-6 w-6 border border-border"
+                  style={{ backgroundColor: colorToHex(c) }}
+                />
               ))}
             </div>
           </div>
@@ -732,12 +737,14 @@ function Index() {
                   <div className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground mt-2">{blended.outfitLabel}</div>
                   <p className="text-muted-foreground mt-4 max-w-2xl leading-relaxed">{blended.definition}</p>
                 </div>
-                <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
                   {blended.colors.map((c) => (
-                    <div key={c} className="flex items-center gap-2">
-                      <span className="h-6 w-6 border border-border" style={{ backgroundColor: colorToHex(c) }} />
-                      <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{c}</span>
-                    </div>
+                    <span
+                      key={c}
+                      title={c}
+                      className="h-6 w-6 border border-border"
+                      style={{ backgroundColor: colorToHex(c) }}
+                    />
                   ))}
                 </div>
               </div>
